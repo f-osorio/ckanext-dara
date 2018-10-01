@@ -569,7 +569,7 @@ def fields():
                     options=jels_to_options(),
                    # size="medium",
                 ),
-                
+
         ),
 
 
@@ -740,6 +740,38 @@ def fields():
         ),
 
 
+        #---------------------------
+        # -- Publication information
+        #---------------------------
+
+        DaraField('publicationID',
+           ('publication',), ('ignore_missing',),
+            Input(
+                name = 'Publication Identifier',
+                placeholder = 'ISSN, ISBN, ...',
+                size = '',
+                classes = [],
+                role = 'master',
+                info=u"""If available, please provide the ISSN or ISBN number for the publication.""",
+                ),
+        ),
+
+        DaraField('publicationID_Type',
+                ('publication',), ('ignore_missing',),
+                Select(
+                name = 'ID Type',
+                options = [
+                    {'text': '', 'value': ''},
+                    {'text': 'ISSN', 'value': 'ISSN'},
+                    {'text': 'ISBN', 'value': 'ISBN'}
+                ],
+                role = 'slave',
+                classes = ['dara_required'],
+                info=u"""Select the type of ID.""",
+                ),
+        ),
+
+
 
 
       # DaraField('Publication_ISBN',
@@ -795,6 +827,7 @@ def fields():
     )
 
     return fields
+
 
 
 def author_fields():
@@ -887,7 +920,7 @@ def author_fields():
                 ),
         ),
 
-        
+
         )
 
     return fields

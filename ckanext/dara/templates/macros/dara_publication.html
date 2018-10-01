@@ -1,0 +1,95 @@
+{# used at journal creation for publication information #}
+{% import 'macros/form.html' as form %}
+
+
+{% resource 'dara/dara.js' %}
+
+
+{% macro publication(h) %}
+
+<div id="authors_wrapper">
+
+    {# preset the datalist #}
+    <datalist id="gnd_publication_name"></datalist>
+    <datalist id="gnd_publication_affiliations"></datalist>
+
+
+    {{ publication_field(h) }}
+
+</div>
+
+{% endmacro %}
+
+{% macro publication_field(h) %}
+
+{% set fields = h.dara_all_fields() %}
+{% for field in fields %}
+    <br>
+    {% if field.id == 'publicationID' or field.id == 'publicationID_Type' %}
+
+        <fieldset class="publication">
+
+        {% set key = field.id %}
+        {% set widget = field.widget %}
+        {% set label = widget.name %}
+        {% set classes = ['inline'] %}
+        {% set additional_classes = widget.classes %}
+        {% set attrs = {'data-infotext': widget.info} %}
+
+        {% if widget.role == 'master' %}
+            {% do classes.append('dara_master') %}
+            <fieldset class="dara_master_slave">
+        {% endif %}
+
+        {% if widget.role == 'slave' %}
+            {% do classes.append('dara_slave') %}
+        {% endif %}
+
+        {% if widget.size == 'medium' %}
+            {% do classes.append('control-medium') %}
+        {% endif %}
+
+        {% if widget.size == 'small' %}
+            {% do classes.append('control-small') %}
+        {% endif %}
+
+        {% if widget.form_type == 'input' and 'hidden_publication_field' not in widget.classes %}
+        {% do attrs.update({'data-publication': key}) %}
+            {{ form.input(name, label=label,
+                    placeholder=placeholder,
+                    value=value,
+                    classes=classes,
+                    attrs=attrs)
+            }}
+        {% endif %}
+
+        {% if widget.form_type == 'select' %}
+            {% do attrs.update({'data-publication': key}) %}
+
+            {% set options = widget.options %}
+            {% set selected = publication['publicationID_Type'] or options[0] %}
+
+            {% do classes.append('select-auto')  %}
+            {% do classes.append('control-select') %}
+            {% do classes.append('ui-widget') %}
+            {% do classes.append('select') %}
+            {{ form.select(name,
+                label = label,
+                options = options,
+                selected=selected,
+                classes=classes,
+                attrs=attrs,
+                )
+
+            }}
+        {% endif %}
+
+        {% if widget.role == 'slave' %}
+            </fieldset>
+        {% endif %}
+
+    {% endif %}
+{% endfor %}
+
+
+{% endmacro %}

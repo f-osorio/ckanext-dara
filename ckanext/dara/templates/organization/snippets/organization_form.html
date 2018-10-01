@@ -24,5 +24,9 @@
 
     {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
 
+    {# Additional fields here #}
+    {% snippet "organization/snippets/publication_info.html" %}
+
   {% endblock %}
 
+</form>

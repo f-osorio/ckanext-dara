@@ -51,10 +51,11 @@ def dara_auto_fields():
 
     return {'URL': dara_url}
 
-
 def dara_author_fields():
     return dara_schema.author_fields()
 
+def dara_all_fields():
+    return dara_schema.fields()
 
 def dara_resource():
     """
@@ -137,10 +138,10 @@ def fileinfo(res):
     filename = last(filter(lambda i: i, url.split('/')))
     cr = last(req.headers.get('content-range', '0').split('/'))
     cl = req.headers.get('content-length', cr)
-    
+
     # for now we just take the original content-length
     # filesize = size(int(cl), system=si)
-    
+
     return {'filesize': cl,
             'filename': filename}
 

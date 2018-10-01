@@ -140,6 +140,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_authors': helpers.dara_authors,
                 'dara_fields': dara_fields,
                 'dara_auto_fields': helpers.dara_auto_fields,
+                'dara_all_fields': helpers.dara_all_fields,
                 'dara_resource_url': helpers.dara_resource_url,
                 'dara_author_fields': helpers.dara_author_fields,
                 'check_journal_role': helpers.check_journal_role,
@@ -189,7 +190,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 action="doi",
                 template="package/doi.html",
                 ckan_icon="exchange")
-        
+
         map.connect('/dataset/{id}/resource/{resource_id}/download/{filename}',
                 controller="ckanext.dara.controller:DaraController",
                 action="resource_download")
