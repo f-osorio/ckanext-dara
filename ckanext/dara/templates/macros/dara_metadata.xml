@@ -149,6 +149,30 @@ resources have different variables #}
 </publisher>
 {% endmacro %}
 
+{# publication information, ISSN and/or ISBN #}
+{% macro publication(doc_type, id, id_type)%}
+{% if doc_type or id %}
+<publications>
+    <publication>
+        <structuredPublication>
+            {% if doc_type %}
+            <documentType>{{ doc_type }}</documentType>
+            {% endif %}
+
+            {% if id_type == 'isbn' %}
+                <isbn>{{ id }}</isbn>
+            {% elif id_type == 'issn' %}
+                <ISSNs>
+                    <ISSN>{{ id }}</ISSN>
+                </ISSNs>
+            {% endif %}
+        </structuredPublication>
+    </publication>
+</publications>
+{% endif %}
+{% endmacro %}
+
+
 
 {# *28/29 availability controlled/free #}
 {% macro availability(type) -%}
