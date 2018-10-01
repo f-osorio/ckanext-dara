@@ -7,18 +7,18 @@ resources have different variables #}
 
 {# XXX missing here:
 
-    [X]  temporalCoverageFree 
+    [X]  temporalCoverageFree
     [X]  numberUnits
     [X]  unitType XXX dito
     [X]  numberVariables XXX dito
     [X]  dataType XXX dito
     [X]  note
-    
+
     XXX we don't have enough data for strucured Publication data: doctype, authors, title are missing.
     for now only using unstructuredPublication, without text. Only PID and PIDType needed
     [X]   Publication_PID
     [X]  Publication_PIDType
-    
+
     -   (PublicationVolume)
     -   (PublicationIssue)
     -   (Publication_StartPage)
@@ -60,13 +60,30 @@ resources have different variables #}
 {%- endmacro %}
 
 
-{# 3. collective title 
-TODO
-#}
+{# 3. collective title #}
+{% macro collective_titles(title, language, volume, issue) %}
+<collectiveTitles>
+    <collectiveTitle>
+        <language>{{ language }}</language>
+        <titleName>
+            {{ title }}
+        </titleName>
+        <numbering>
+            {% if volume > 0 %}
+                Vol {{ volume }}
+            {% endif %}
+            {% if issue > 0%}
+                , No {{ issue }}
+            {% endif %}
+        </numbering>
+    </collectiveTitle>
+</collectiveTitles>
+{%- endmacro %}
+
 
 {# 4. creators #}
 {% macro creator(author) -%}
-<creator> 
+<creator>
     <person>
         <firstName>{{ author['firstname'] or None }}</firstName>
         <lastName>{{ author['lastname'] or None }}</lastName>
@@ -126,7 +143,7 @@ TODO
 {%- endmacro %}
 
 
-{# 13. alternative identifier 
+{# 13. alternative identifier
 {% macro alternativeIDs(id, type) -%}
 {% if id %}
 <alternativeIDs>
@@ -174,7 +191,7 @@ TODO
 
 
 {# 18. geographic coverage controlled/free #}
-{# XXX controlled not implemented yet; can have multiple entries #}  
+{# XXX controlled not implemented yet; can have multiple entries #}
 {% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
 {% if geocoverage or geocoverage_free %}
 <geographicCoverages>
@@ -204,8 +221,8 @@ TODO
 <universes>
     <universe>
         <language>{{ lang }}</language> {# XXX not implemented #}
-        {# we are using 'None' as fallback since 
-        the schema is not correct here. dara expects content, but schema 
+        {# we are using 'None' as fallback since
+        the schema is not correct here. dara expects content, but schema
          does not force it #}
         <sampled>{{ sampled }}</sampled>
     </universe>
