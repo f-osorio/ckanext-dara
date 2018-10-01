@@ -221,6 +221,23 @@ resources have different variables #}
 {%- endmacro %}
 
 
+{# controlled keywords #}
+{% macro keywords(keywords) %}
+{% if keywords %}
+<controlledKeywords>
+    <controlledKeyword>
+        <keywordSchemaType>STW</keywordSchemaType>
+        <identifiers>
+            {% for keyword in keywords %}
+            <identifier>{{ keyword }}</identifier>
+            {% endfor %}
+        </identifiers>
+    </controlledKeyword>
+</controlledKeywords>
+{% endif %}
+{% endmacro %}
+
+
 {# 17. description #}
 {% macro description(text) -%}
 {% if text %}
