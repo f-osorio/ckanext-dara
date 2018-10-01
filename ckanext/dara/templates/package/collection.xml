@@ -44,7 +44,7 @@ http://www.da-ra.de/en/technical-information/doi-registration/
                             pkg.dara_Publication_Volume,
                             pkg.dara_Publication_Issue)}}
 
-{# 4. creators  TODO: 4.2 institution #}
+{# 4. creators  TODO: 4.2 institution(affiliation is in place?) #}
 <creators>
 {% for author in dara_authors %}
     {{ macros.creator(author) }}

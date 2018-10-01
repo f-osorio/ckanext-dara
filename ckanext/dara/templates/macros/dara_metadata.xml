@@ -127,6 +127,28 @@ resources have different variables #}
 </publicationDate>
 {%- endmacro %}
 
+{# Publisher information #}
+{# only 1 publisher per? #}
+{# supported with a lookup service #}
+{% macro publisherData(publisher) %}
+<publisher>
+    <institution>
+        <institutionName>
+            {{ publisher['name'] }}
+        </institutionName>
+        {% if publisher['id'] %}
+            {% if publisher['id'] == 'GND' %}
+                {% set url = "http://d-nb.info/gnd/" ~ publisher['id'] %}
+            {% endif %}
+        <institutionIDs>
+            <identifierURI>{{ url }}</identifierURI>
+            <identifierSchema>{{ publication['id_type'] }}</identifierSchema>
+        </institutionIDs>
+        {% endif %}
+    </institution>
+</publisher>
+{% endmacro %}
+
 
 {# *28/29 availability controlled/free #}
 {% macro availability(type) -%}
@@ -191,6 +213,7 @@ resources have different variables #}
 
 
 {# 18. geographic coverage controlled/free #}
+{# these fields should only appear in `resource.xml` #}
 {# XXX controlled not implemented yet; can have multiple entries #}
 {% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
 {% if geocoverage or geocoverage_free %}
