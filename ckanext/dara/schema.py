@@ -761,7 +761,6 @@ def fields():
                 Select(
                 name = 'ID Type',
                 options = [
-                    {'text': '', 'value': ''},
                     {'text': 'ISSN', 'value': 'ISSN'},
                     {'text': 'ISBN', 'value': 'ISBN'}
                 ],

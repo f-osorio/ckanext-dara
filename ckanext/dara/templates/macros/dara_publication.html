@@ -23,8 +23,7 @@
 {% macro publication_field(h) %}
 
 {% set fields = h.dara_all_fields() %}
-{% for field in fields %}
-    <br>
+{%- for field in fields %}
     {% if field.id == 'publicationID' or field.id == 'publicationID_Type' %}
 
         <fieldset class="publication">
@@ -89,7 +88,7 @@
         {% endif %}
 
     {% endif %}
-{% endfor %}
+{% endfor -%}
 
 
 {% endmacro %}
