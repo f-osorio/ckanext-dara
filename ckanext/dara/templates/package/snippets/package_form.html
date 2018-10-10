@@ -1,30 +1,66 @@
 {% ckan_extends %}
 
 {% block metadata_fields %}
-
+{% resource 'dara/doi-confirm.js' %}
 
  {#   {% snippet 'package/snippets/package_metadata_fields.html', data=data, errors=errors %} #}
 {% endblock %}
 
 {% block form_actions %}
-    
+
     <div class="form-actions">
-      
+
       {% block disclaimer %}
       {#XXX  we'll definitely need a special edawax disclaimer here #}
       {% endblock %}
-      
-      
+
+
       {% block delete_button %}
-        {{ super() }}
+        {% set pkg = h.dara_pkg() %}
+        {% set is_doi_set = pkg['dara_registered_test']|length > 1 %}
+        {% if is_doi_set %}
+            {% if h.check_access('package_delete', {'id': data.id}) and not data.state == 'deleted' %}
+                {% set locale = h.dump_json({'content': _('A DOI has been submited for this resource. It cannot be deleted.'), 'heading':_('Cannot Delete') }) %}
+
+                <button class="btn btn-danger pull-left" data-toggle="modal" data-target="#deletionModal">
+                    {{ _('Delete') }}
+                </button>
+
+            {% endif %}
+        {% else %}
+            {{ super() }}
+        {% endif %}
+
       {% endblock %}
-     
+
       {% block save_button %}
         {{ super() }}
        {% endblock %}
-       
+
        {{ form.required_message() }}
 
     </div>
+
+    {# modal for deletion for records with registered DOI #}
+    <div class="modal fade" id="deletionModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="deletionModalLabel">Cannot Delete Record</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This record can't be deleted becasuse the DOI for this record has been registered with da|ra. You can update the metadata in the record and resubmit it to da|ra.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+
 
