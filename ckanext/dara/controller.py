@@ -28,6 +28,19 @@ import ckan.lib.uploader as uploader
 import paste.fileapp
 import mimetypes
 
+from functools import wraps
+
+def admin_req(func):
+    @wraps(func)
+    def check(*args, **kwargs):
+        id = kwargs['id']
+        controller = args[0]
+        pkg = tk.get_action('package_show')(None, {'id': id})
+        if not check_journal_role(pkg, 'admin') and not h.check_access('sysadmin'):
+            tk.abort(401, 'unauthorized to manage DOIs')
+        return func(controller, id)
+    return check
+
 
 class DaraError(Exception):
     def __init__(self, msg):
@@ -48,19 +61,13 @@ class DaraController(PackageController):
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
 
-    # TODO do this as decorator, as in edawax.controller
-    def _check_access(self, id):
-        context = self._context()
-        pkg = tk.get_action('package_show')(context, {'id': id})
-        if not check_journal_role(pkg, 'admin') and not h.check_access('sysadmin'):
-            tk.abort(401, 'Unauthorized to manage DOIs')
 
+    @admin_req
     def register(self, id, template):
         """
         register at da|ra
         """
 
-        self._check_access(id)
         context = self._context()
 
         if params()['test'] or params()['test_register']:
@@ -133,11 +140,11 @@ class DaraController(PackageController):
         xmlschema.assertValid(doc)
         return xml_string
 
+    @admin_req
     def doi(self, id, template):
         """
         DOI manager page
         """
-        self._check_access(id)
         context = self._context()
         c.pkg_dict = tk.get_action('package_show')(context, {'id': id})
         c.pkg = context['package']
