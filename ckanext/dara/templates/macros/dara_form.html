@@ -32,9 +32,11 @@ Examples:
 
 #}
 {% macro select(name, id='', label='', options='', selected='', error='', classes=[], attrs={}, is_required=false) %}
+  
+  {% resource 'dara/dara.js' %}
+  
   {% set classes = (classes|list) %}
   {% do classes.append('control-select') %}
-
   {%- set extra_html = caller() if caller -%}
   {% call form.input_block(id or name, label or name, error, classes, extra_html=extra_html, is_required=is_required) %}
     <select id="{{ id or name }}" name="{{ name }}" {{ form.attributes(attrs) }}>

@@ -1,0 +1,60 @@
+{% ckan_extends %}
+
+{% import 'macros/dara_form.html' as dara_form %}
+{% resource 'dara/underscore.js' %}
+{% resource 'dara/dara.js' %}
+{# 
+    The new "fields" field can't be totally deleted. When there are no values in the field nothing gets sent to the 'config_update' function so no changes get made.
+    This should be an issue because it shouldn't be the case that this field is ever empty.
+#}
+
+{#
+    The default values for the schema fields to include
+    [
+        'PublicationDate',
+        'Availabilitycontrolled',
+        'currentVersion',
+        'geographicCoverageFree',
+        'universeSampled',
+        'temporalCoverageFree',
+        'numberUnits',
+        'unitType',
+        'numberVariables',
+        'dataType',
+        'note',
+        'jda_submission_id',
+        'jels',
+        'Publication_PID',
+        'Publication_PIDType',
+        'Publication_Volume',
+        'Publication_Issue',
+        'Publication_StartPage',
+        'Publication_EndPage'
+    ]
+#}
+
+
+{% block admin_form %}
+    {{ super() }}
+
+    <h3>Custom Field</h3>
+    {% set attrs = {'class': 'select_fields', 'multiple': 'multiple',
+        'style': 'width: 62%' } %}
+    {% set options = h.dara_all_fields() %}
+    {% set selected = h.get_fields_to_display() %}
+
+    {{ dara_form.select('ckan.schema_deploy', id='ckan_form_fields', label=_('Fields'), options=options, error=errors['ckan.schema_deploy'], classes=["select.fields"], attrs=attrs, selected=selected) }}
+
+{% endblock %}
+
+
+{% block admin_form_help %}
+
+    {{ super() }}
+
+    <p>
+        <strong>Fields:</strong>
+        Select the fields that will appear in the forms for collections and resources.
+    </p>
+
+{% endblock %}

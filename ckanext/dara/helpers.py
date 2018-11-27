@@ -15,7 +15,18 @@ from hurry.filesize import size, si
 from toolz.itertoolz import last
 
 
+def dara_all_fields():
+    output = []
+    for item in dara_schema.fields():
+        output.append({'value': item.id, 'text': item.widget.name})
+    return output
 
+def get_fields_to_display():
+    values = tk.get_action('config_option_show')(None, {'key': 'ckan.schema_deploy'})
+    if ',' in values:
+        return values.split(',')
+    else:
+        return values
 
 def dara_pkg():
     """

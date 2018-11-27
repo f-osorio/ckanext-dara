@@ -22,7 +22,10 @@ PREFIX = 'dara_'
 
 
 def dara_fields(dara_type):
-    return filter(lambda field: dara_type in field.adapt, ds.fields())
+    # TODO: find a better way
+    target_fields = helpers.get_fields_to_display()
+    fields = filter(lambda field: dara_type in field.adapt, ds.fields())
+    return (field for field in fields if field.id in target_fields)
 
 
 def vc(action, field):
@@ -97,6 +100,16 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     # def before_view(self, pkg_dict):
         # import ipdb; ipdb.set_trace()
 
+    # make the schema runtime editable
+    def update_config_schema(self, schema):
+        ignore_missing = tk.get_validator('ignore_missing')
+        jel_convert = validators.jel_convert
+
+        schema.update({
+            'ckan.schema_deploy': [ignore_missing, jel_convert]
+            })
+
+        return schema
 
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
@@ -150,6 +163,8 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'dara_use_testserver': doi.use_testserver,
                 'av_transform': helpers.av_transform,
                 'unit_type_transform': helpers.unit_type_transform,
+                'dara_all_fields': helpers.dara_all_fields,
+                'get_fields_to_display': helpers.get_fields_to_display,
                 }
 
     def is_fallback(self):

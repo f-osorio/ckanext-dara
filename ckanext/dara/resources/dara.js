@@ -8,13 +8,19 @@
 
 $(master_slave_input()); // XXX refactor!
 
-
 $(".select_jels").select2({
 // TODO: get JELs with request to econ_ws
 // https://select2.org/data-sources/ajax
     placeholder: "Start typing and select JELs",
     allowClear: true,
 });
+
+$(".select_fields").select2({
+// https://select2.org/data-sources/ajax
+    placeholder: "Select the fields for the forms",
+    allowClear: true,
+});
+
 
 
 function master_slave_input() {
@@ -51,9 +57,9 @@ function master_slave_input() {
 
 
 
-
 //TODO might be optimized as standalone function?
 $(function res_preselection() {
+// fields based on preselection
 // fields based on preselection
 
     var master = $('#dara_res_preselection');
