@@ -123,7 +123,11 @@ def _orcid(author_orig):
         return author
 
     # TODO: more detailed error reasons
-    msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
+    if req.status_code == 404:
+        msg = "Personal ID {} could not be found".format(author['authorID'])
+    else:
+        msg = 'Personal ID {} does not seem to be a valid ORCID ID'.format(author['authorID'])
+
     author[error_key] = msg
     return author
 

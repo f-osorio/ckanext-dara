@@ -22,7 +22,6 @@ PREFIX = 'dara_'
 
 
 def dara_fields(dara_type):
-    # TODO: find a better way
     target_fields = helpers.get_fields_to_display()
     fields = filter(lambda field: dara_type in field.adapt, ds.fields())
     return (field for field in fields if field.id in target_fields)
