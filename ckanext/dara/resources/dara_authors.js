@@ -119,27 +119,26 @@ function ws_affil_call(val) {
 
 function update_fields (inp, val) {
     // TODO remove jquery
+    var authorfields = inp.closest('fieldset.author');
 
-    var authorfields = $(inp).closest('fieldset.author');  // XXX
+    var firstname = authorfields.querySelectorAll('[data-author="firstname"]')[0];
+    var aid = authorfields.querySelectorAll('[data-author="authorID"]')[0];
+    var aid_type = authorfields.querySelectorAll('[data-author="authorID_Type"]')[0];
 
-    var firstname = $(authorfields).find('[data-author="firstname"]');
-    var aid = $(authorfields).find('[data-author="authorID"]');
-    var aid_type = $(authorfields).find('[data-author="authorID_Type"]');
     var author = _.find(_.flatten(ws_objects, true), function (ob) {
         return ob.concept.value === val;
     });
     var authorname = author.prefName.value.split(", ");
 
     inp.value=authorname[0];
-    var slave = $(authorfields).find('.dara_slave');
-    $(aid_type)
-        //.removeProp('disabled')
-        .prop('required', true)
-        .val('GND');
-    $(slave).show();
+    var slave = authorfields.querySelectorAll('.dara_slave')[0];
+    aid_type.attributes.required = "required";
+    aid_type.value = 'GND';
 
-    $(firstname).val(authorname[1]);
-    $(aid).val(author.concept.value.replace('http://d-nb.info/gnd/', ''));
+    slave.style.display = "inline-block";
+    firstname.value = authorname[1];
+    
+    aid.value = author.concept.value.replace('http://d-nb.info/gnd/', '');
 
     return
 }

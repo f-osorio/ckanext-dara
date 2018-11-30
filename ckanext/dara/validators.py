@@ -122,7 +122,6 @@ def _orcid(author_orig):
         author.update(map(orcid_map, mapping.iterkeys()))
         return author
 
-    # TODO: more detailed error reasons
     if req.status_code == 404:
         msg = "Personal ID {} could not be found".format(author['authorID'])
     else:

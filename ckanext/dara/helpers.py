@@ -72,7 +72,15 @@ def dara_resource():
     somehow hack. c.resource doesnt return a resource when calling .../dara_xml
     """
     # TODO improve this. We should somehow be able to get the type of the
-    # context (resource or package)
+    # context (resource or package) [not sure what better solution might look like. This seems to be working fine. Could also check for 'resource_id' in 'c']
+    #
+    # Could update 'c' to have a 'resource' parameter in the controller
+    # but that would only move the 'get_action' statement there. The addition
+    # would be in the 'xml' function in the controller
+    #
+    # c.resource = tk.get_action('resource_show')(None, {'id': c.resource_id})
+    # 
+    # Is it worth it?
     try:
         if 'resource' in request.path:
             return tk.get_action('resource_show')(None, {'id': c.resource_id})

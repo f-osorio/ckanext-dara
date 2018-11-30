@@ -58,9 +58,7 @@ function master_slave_input() {
 
 
 
-//TODO might be optimized as standalone function?
 $(function res_preselection() {
-// fields based on preselection
 // fields based on preselection
 
     var master = $('#dara_res_preselection');

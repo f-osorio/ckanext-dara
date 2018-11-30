@@ -209,7 +209,6 @@ def params():
     so we fake it (test_register).
     defaults: register at 'real' server and get a DOI
     """
-    # TODO implement this more functional
 
     ptest = lambda p: p in tk.request.params
     ctest = {'true': True, 'false': False}.get(config.get('ckanext.dara.use_testserver', 'false'))

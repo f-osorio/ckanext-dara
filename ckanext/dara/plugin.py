@@ -85,8 +85,6 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions)
 
-
-
    #def before_create(self, context, resource):
    #
    #    def get_pkg():
