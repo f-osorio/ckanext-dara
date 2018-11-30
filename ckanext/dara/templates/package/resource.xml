@@ -37,10 +37,9 @@ we need to make sure here, that dara gets a title #}
 {{ macros.otherTitles('en', pkg.dara_OtherTitle or None, pkg.dara_OtherTitleType or None) }} 
 #}
 
-{# TODO 3. collective title  #}
+{# 3. collective title -- is this required? -- #}
       
-{# 4. creators  TODO: 4.2 institution #}
-{#XXX for now we take the authors given in the collection here #}
+{# 4. creators  / 4.2 institution #}
 <creators>  
 {% for author in dara_authors %}
     {{ macros.creator(author) }}

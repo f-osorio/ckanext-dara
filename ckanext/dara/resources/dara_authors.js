@@ -1,18 +1,6 @@
 "use strict";
 
 
-// TODO:
-// -    inp.oninput etc. als eigene Funktion, um sie in add_authors() separat
-//      als eventListener aufrufen zu können. So wie es jetzt ist, werden dann
-//      alle input Elemente noch mal gebunden
-//
-// -    jQuery in update_fields() loswerden. Es gibt inzwischen ein JS-natives
-//      .closest(), aber das ist noch zu neu
-//
-// -    rewrite inp.oninput as addEventLister function
-//
-// -    check for purity
-//
 // -    better implement as ckan.module?
 //      http://docs.ckan.org/en/latest/theming/javascript.html
 
@@ -39,7 +27,7 @@ function ws_names_init () {
                 var val_split = val.split(' [gnd:]');
                 var ws_id = val_split[val_split.length -1];
                 update_fields(inp, ws_id);
-                return
+                return;
             }
             ws_names_call(val);
         }
@@ -118,7 +106,6 @@ function ws_affil_call(val) {
 
 
 function update_fields (inp, val) {
-    // TODO remove jquery
     var authorfields = inp.closest('fieldset.author');
 
     var firstname = authorfields.querySelectorAll('[data-author="firstname"]')[0];

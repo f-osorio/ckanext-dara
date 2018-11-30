@@ -93,8 +93,7 @@ Examples:
             {% do classes.append('error') %}
         {% endif %}
         #}
-        
-        {#TODO optimize! #}
+
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
         {% endif %}

@@ -90,29 +90,6 @@
             value=data.tag_string, error=errors.tags, 
             classes=['control-medium'], 
             attrs=tag_attrs) }}
-
-
-        {# master_slave_input() does not work properly for markdown
-        fields?  
-        TODO try again when restructuring fields in md_schema
-
-            {% set selected = dara.dara_DescriptionType %}
-            {{ form.select('dara_DescriptionType', 
-                id='field-dara_DescriptionType', 
-                label="Type of Description",
-                classes=['dara_slave'],
-                options=[
-                    {'value': '1', 'text' :'Abstract'}, 
-                    {'value': '2', 'text' : 'Series Information'}, 
-                    {'value': '3', 'text' :'Table of Contents'},
-                    {'value' : '4', 'te#XXX optimise!
-                ],
-                error=errors.dara_DescriptionType,
-                selected=selected
-                ) 
-            }} 
-        #}   
-        
         
         {# Authors #}
         {{ authors.authors('dataset', h, data, errors) }}

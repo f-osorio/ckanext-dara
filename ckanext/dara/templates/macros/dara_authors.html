@@ -101,20 +101,10 @@
             'list': 'gnd_author_affiliations'}) %}
         {% endif %}
 
-
-
-                
         {% for c in additional_classes %}
            {% do classes.append(c) %}
         {% endfor %}
 
-        {#TODO optimize! collides with autofill via ORCID or GND
-        {% if 'dara_required' in additional_classes %}
-            {% do attrs.update({'required': 'required'}) %}
-        {% endif %}
-        #}
-
-        
         {% if widget.placeholder %}
            {% set placeholder = widget.placeholder %}
         {% else %}
