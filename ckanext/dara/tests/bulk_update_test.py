@@ -132,7 +132,7 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         packages = self._create_package_resource(num_journals=3)
         tester = BulkUpdater(self._get_app(),key='my-test-key',test=True)
 
-        new_authors = tester.update_affil_id(packages[0]['name'])
+        new_authors, update = tester.update_affil_id(packages[0]['name'])
 
         affiliations = []
         for author in new_authors:
@@ -140,7 +140,7 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
             affiliations.append( (author['affil'], affil_id) )
         assert (u'Institut f\xfcr Weltwirtschaft', u'1007681-5') in affiliations, affiliations
 
-        new_authors = tester.update_affil_id(packages[2]['name'])
+        new_authors, update = tester.update_affil_id(packages[2]['name'])
         assert new_authors[0]['affilID'] == u'270861-9', new_authors
 
 
@@ -149,7 +149,7 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         packages = self._create_package_resource(num_journals=3)
         tester = BulkUpdater(self._get_app(), key=sysadmin['apikey'],test=True)
 
-        new_authors = tester.update_affil_id(packages[2]['name'])
+        new_authors, update = tester.update_affil_id(packages[2]['name'])
         result = tester.patch_package(id=packages[2]['name'], update=new_authors)
         assert packages[2] != result, result
         assert 'dara_authors' in result.keys(), result.keys()
@@ -259,13 +259,13 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         packages = self._create_package_resource(num_journals=3)
         tester = BulkUpdater(self._get_app(), key=sysadmin['apikey'],test=True)
 
-        new_authors = tester.update_affil_id(packages[0]['name'])
+        new_authors, update = tester.update_affil_id(packages[0]['name'])
         result=tester.patch_package(id=packages[0]['name'],update=new_authors)
 
-        new_authors = tester.update_affil_id(packages[1]['name'])
+        new_authors, update = tester.update_affil_id(packages[1]['name'])
         result=tester.patch_package(id=packages[1]['name'],update=new_authors)
 
-        new_authors = tester.update_affil_id(packages[2]['name'])
+        new_authors, update = tester.update_affil_id(packages[2]['name'])
         result=tester.patch_package(id=packages[2]['name'],update=new_authors)
 
         ## Package 1 ##
@@ -442,7 +442,7 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         data = xmltodict.parse(xml)
         id_ = data['resource']['resourceIdentifier']['identifier']
 
-        new_authors = tester.update_affil_id(packages[0]['name'])
+        new_authors, update = tester.update_affil_id(packages[0]['name'])
         result=tester.patch_package(id=packages[0]['name'],update=new_authors)
 
         url = base.format(id=result['id'])
@@ -473,6 +473,16 @@ class TestBulkUpdater(helpers.FunctionalTestBase):
         # resubmit to DARA
         dara=darapi(auth, new_xml.decode('utf-8'), test=True, register=False)
         assert dara in [200, 201], dara
+
+
+    def test_update_with_no_changes(self):
+        packages = self._create_package_resource(num_journals=4)
+        tester = BulkUpdater(self._get_app(),key='my-test-key',test=True)
+
+        new_authors, update = tester.update_affil_id(packages[3]['name'])
+
+        assert update is False, update
+
 
 
 
