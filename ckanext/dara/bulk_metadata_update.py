@@ -2,12 +2,33 @@
     Script to update metadata in the JDA for fields that exist
 """
 import ast
+import sys
 import json
 import requests
 import ckanapi
 from pylons import config
 from ckanext.dara.controller import darapi, auth
 from ckanext.dara.controller import DaraController as dc
+
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# file handler
+fh = logging.FileHandler('bulk_update.log')
+fh.setLevel(logging.INFO)
+# console handler
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.INFO)
+
+# set format
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+
+# add handler
+logger.addHandler(fh)
+logger.addHandler(ch)
 
 
 class BulkUpdater:
@@ -123,7 +144,7 @@ class BulkUpdater:
 
 
 if __name__ == "__main__":
-    print('===Starting===')
+    logger.info('|=|=|=|Starting|=|=|=|')
     import os
     import configparser as cp
     path = os.path.dirname(os.path.abspath(__file__)) + '/../../test.ini'
@@ -137,8 +158,9 @@ if __name__ == "__main__":
             config.get('app:main', 'ckanext.dara.password'))
 
     packages = obj.get_packages(offset=0)
-    print(packages)
     count = 0
+    updated_records = []
+    errors = []
     for package in packages:
         details = obj.get_package(package)
 
@@ -147,8 +169,11 @@ if __name__ == "__main__":
             #if details['name'] == 'worker-personality-another-skill-bias-beyond-education-in-the-digital-age':
             new_authors, updated = obj.update_affil_id(details['name'])
             if updated:
-                pass
-                #result=obj.patch_package(id=details['name'],update=new_authors)
+                try:
+                    #result=obj.patch_package(id=details['name'],update=new_authors)
+                    updated_records.append(package)
+                except Exception as e:
+                    errors.append(('META:: {}: {}'.format(package, e)))
 
 
         # update DA|RA
@@ -158,14 +183,17 @@ if __name__ == "__main__":
             count += 1
             #if details['name'] == 'worker-personality-another-skill-bias-beyond-education-in-the-digital-age':
             base = 'http://journaldata.zbw.eu/dataset/{id}/dara_xml'
-            url = base.format(id=details['id'])
-            #new_xml = requests.get(url).content
-            #dara=darapi(auth, new_xml.decode('utf-8'), test=False, register=False)
-            #print(dara)
+            try:
+                url = base.format(id=details['id'])
+                new_xml = requests.get(url).content
+                #dara=darapi(auth, new_xml.decode('utf-8'), test=False, register=False)
+            except Exception as e:
+                errors.append(('DARA:: {}: {}'.format(package, e)))
 
-    print(count)
-    print('===Finished===')
-
+    logger.info("{} files matched criteria".format(count))
+    logger.info("\nFollowing files were updated:\n\t{}".format('\n\t'.join(updated_records)))
+    logger.info("Encountered the following issues:\n\t{}".format('\n\t'.join(errors)))
+    logger.info('|=|=|=|Finished|=|=|=|\n\n')
 
 
 
