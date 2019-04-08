@@ -19,8 +19,8 @@ class BulkUpdater:
         self.lookup_base = u'http://www.zbw.eu/beta/econ-ws/suggest2?dataset=econ_corp&query={name}'
 
 
-    def get_packages(self):
-        return self.obj.action.package_list()
+    def get_packages(self, limit=10, offset=0):
+        return self.obj.action.package_list(limit=limit, offset=offset)
 
 
     def get_package(self, id):
@@ -42,7 +42,10 @@ class BulkUpdater:
     def lookup(self, name):
         name = name.replace('-', ' ').replace('  ', ' ').replace('  ', ' ')
         url = self.lookup_base.format(name=name)
-        r = requests.get(url).json()['results']
+        try:
+            r = requests.get(url).json()['results']
+        except Exception as e:
+            return False
 
         if len(r['bindings']) == 1:
             b_id = r['bindings'][0][u'concept'][u'value'].replace('http://d-nb.info/gnd/', '')
@@ -123,16 +126,18 @@ if __name__ == "__main__":
     print('===Starting===')
     import os
     import configparser as cp
-    path = os.path.dirname(__file__) + '/../../test.ini'
+    path = os.path.dirname(os.path.abspath(__file__)) + '/../../test.ini'
+    #path = '~/Python/src/ckanext-dara/ckanext/test.ini'
     config = cp.ConfigParser()
     #config.read_file(open(path))
     config.read(path)
+
     obj = BulkUpdater(None, key='d7aca98d-f0da-4dd4-b2bd-fc3e5d1e5682')
     auth = (config.get('app:main', 'ckanext.dara.user'),
             config.get('app:main', 'ckanext.dara.password'))
 
-    print(auth)
-    packages = obj.get_packages()
+    packages = obj.get_packages(offset=0)
+    print(packages)
     count = 0
     for package in packages:
         details = obj.get_package(package)
@@ -154,9 +159,9 @@ if __name__ == "__main__":
             #if details['name'] == 'worker-personality-another-skill-bias-beyond-education-in-the-digital-age':
             base = 'http://journaldata.zbw.eu/dataset/{id}/dara_xml'
             url = base.format(id=details['id'])
-            new_xml = requests.get(url).content
+            #new_xml = requests.get(url).content
             #dara=darapi(auth, new_xml.decode('utf-8'), test=False, register=False)
-            print(dara)
+            #print(dara)
 
     print(count)
     print('===Finished===')

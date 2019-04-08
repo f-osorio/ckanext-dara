@@ -33,6 +33,7 @@ function ws_names_init () {
     _.each(inputs, function (inp) {
         inp.oninput = function() {
             var val = inp.value;
+            console.log('update', val);
             if(_.isUndefined(val)) return;
             if(val.length < 2) return;
             if(val.indexOf(' [gnd:]') != -1) {
@@ -43,7 +44,6 @@ function ws_names_init () {
             }
             //clear author ID if the name changed
             clear_author_id(inp);
-
             ws_names_call(val);
         }
     });
@@ -94,7 +94,6 @@ function ws_names_call(val) {
                     dl_names.appendChild(option);
                 };
             });
-
             ws_objects.push(current_objects);
         },
     });
