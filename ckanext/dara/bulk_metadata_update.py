@@ -89,7 +89,8 @@ class BulkUpdater:
         try:
             authors = package['dara_authors']
         except Exception as e:
-            return False
+            logger.warning('"{}" has no dara_authors'.format(name))
+            return False, False
 
         updated = False
         updated_authors = []
@@ -157,7 +158,7 @@ if __name__ == "__main__":
     auth = (config.get('app:main', 'ckanext.dara.user'),
             config.get('app:main', 'ckanext.dara.password'))
 
-    packages = obj.get_packages(offset=0)
+    packages = obj.get_packages(offset=100)
     count = 0
     updated_records = []
     errors = []
@@ -168,9 +169,9 @@ if __name__ == "__main__":
             # update metadata
             #if details['name'] == 'worker-personality-another-skill-bias-beyond-education-in-the-digital-age':
             new_authors, updated = obj.update_affil_id(details['name'])
-            if updated:
+            if updated and new_authors:
                 try:
-                    #result=obj.patch_package(id=details['name'],update=new_authors)
+                    result=obj.patch_package(id=details['name'],update=new_authors)
                     updated_records.append(package)
                 except Exception as e:
                     errors.append(('META:: {}: {}'.format(package, e)))
@@ -186,7 +187,7 @@ if __name__ == "__main__":
             try:
                 url = base.format(id=details['id'])
                 new_xml = requests.get(url).content
-                #dara=darapi(auth, new_xml.decode('utf-8'), test=False, register=False)
+                dara=darapi(auth, new_xml.decode('utf-8'), test=False, register=False)
             except Exception as e:
                 errors.append(('DARA:: {}: {}'.format(package, e)))
 
