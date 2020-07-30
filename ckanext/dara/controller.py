@@ -123,6 +123,7 @@ class DaraController(PackageController):
         """
         returning valid dara XML
         """
+        print('Creating XML (controller)')
         # certs = '/etc/pki/tls/certs/ca-bundle.crt'
         response.headers['Content-Type'] = "text/xml; charset=utf-8"
         xml_string = tk.render(template)

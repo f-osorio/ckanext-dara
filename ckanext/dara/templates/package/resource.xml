@@ -133,12 +133,8 @@ dara expects content, but schema does not force it #}
     </dataSet>
 </dataSets>
 
-
-
 {# 27. note #}
-{{ macros.note(res.dara_note) or None }}
-
-
+{{ macros.note(res.dara_note or None) }}
 
 {# 31. relation #}
 {# 'IsPartOf' references the collection (in our case) #}

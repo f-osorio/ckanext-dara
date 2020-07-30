@@ -1,6 +1,8 @@
 from toolz.dicttoolz import get_in
 import ckan.plugins.toolkit as tk
-from pylons import config
+from ckan.common import config
+import ckan.lib.helpers as h
+import ckanext.dara.views as v
 
 
 # XXX   I haven't found a way to make the CKAN API handle custom exceptions
@@ -9,7 +11,7 @@ from pylons import config
 @tk.side_effect_free
 def get_by_doi(context, q):
     """return package or resource with the given DOI"""
-    
+
     def get_package(data_dict):
         solr = tk.get_action('package_search')(None, data_dict)
         return get_doi_obj(solr, 'package_show')
@@ -34,21 +36,23 @@ def get_by_doi(context, q):
 
     ts = config.get('ckanext.dara.use_testserver', 'false')
     field = {'true': 'dara_DOI_Test', 'false': 'dara_DOI'}.get(ts)
-    
+
     search_str = u'{}:{}'.format(field, doi)
     pkg_data_dict = {'fq': search_str}
     res_data_dict = {'query': search_str}
-    
+
     data = get_package(pkg_data_dict) or get_resource(res_data_dict) or None
-   
+
     if not data:
         raise tk.ObjectNotFound("Object with DOI {}".format(doi))
-    
+
     return data
 
 
 @tk.side_effect_free
 def xml_show(context, data_dict):
+    """Return the xml file for a dataset or resource
+    """
     def _get_type(id):
         actions = {'package_show': 'package/collection.xml', 'resource_show': 'package/resource.xml'}
         for action, temp in actions.items():
@@ -63,8 +67,10 @@ def xml_show(context, data_dict):
     id_ = context.get('id', data_dict.get('id', None))
     method, pkg = _get_type(id_)
     if method == 'package_show':
-        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=id_, template='package/collection.xml')
+        return v.xml(id_) # returns the XML as part of JSON, CKAN doesn't suport returning just xml
+        # The previous version of this acted through a redirect.
+        # However, the new API view doesn't allow this. For now the result is being returned in the JSON
     elif method == 'resource_show':
-        tk.redirect_to(controller='ckanext.dara.controller:DaraController', action='xml', id=pkg['package_id'], resource_id=id_, template='package/resource.xml')
+        return v.xml(pkg['package_id'], id_)
     return 'Unable to generate XML.'
 

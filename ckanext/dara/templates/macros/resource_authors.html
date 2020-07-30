@@ -1,9 +1,9 @@
 {# used to create author entries in resources #}
-{% import 'macros/form.html' as form %}
+{%- import 'macros/form.html' as form -%}
 
 
-{% macro resource_authors(h, data, errors) %}
-    {% set aut = h.dara_authors %}
+{%- macro resource_authors(h, data, errors) -%}
+    {%- set aut = h.dara_authors -%}
 
     <div id="author_wrapper">
         <fieldset id="authors">
@@ -12,4 +12,4 @@
 
         </fieldset>
     </div>
-{% endmacro %}
+{%- endmacro -%}

@@ -6,8 +6,6 @@ import json
 import requests
 import ckanapi
 
-from ckanext.dara.controller import DaraController as dc
-
 """
     TODO:
         * updating resources

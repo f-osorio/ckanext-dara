@@ -124,7 +124,6 @@ def register(id):
                 test=params()['test'], register=params()['register'])
     return response()
 
-#(id, resource_id=None):
 def xml(id, resource_id=None):
     """
     returning valid dara XML

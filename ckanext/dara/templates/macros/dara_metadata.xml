@@ -26,36 +26,36 @@ resources have different variables #}
 #}
 
 
-{% macro resourceIdentifier(id, currentVersion) -%}
+{%- macro resourceIdentifier(id, currentVersion) -%}
 <resourceIdentifier>
-    <identifier>{{ id }}</identifier>
-    <currentVersion>{{ currentVersion or '1' }}</currentVersion>
+    <identifier>{{- id -}}</identifier>
+    <currentVersion>{{- currentVersion or '1' -}}</currentVersion>
 </resourceIdentifier>
-{%- endmacro %}
+{%- endmacro -%}
 
 
 {# 1. title #}
-{% macro titles(title, language) -%}
+{%- macro titles(title, language) -%}
 <titles>
     <title>
-        <language>{{ language }}</language>
-        <titleName>{{ title }}</titleName>
+        <language>{{- language -}}</language>
+        <titleName>{{- title -}}</titleName>
     </title>
 </titles>
-{%- endmacro %}
+{%- endmacro -%}
 
 {# 2. other titles #}
-{% macro otherTitles(language, otherTitle, otherTitleType) -%}
-{% if otherTitle %}
+{%- macro otherTitles(language, otherTitle, otherTitleType) -%}
+{%- if otherTitle -%}
 <otherTitles>
     <otherTitle>
-        <language>{{ language }}</language>
-        <titleName>{{ otherTitle }}</titleName>
-        <titleType>{{ otherTitleType }}</titleType>
+        <language>{{- language -}}</language>
+        <titleName>{{- otherTitle -}}</titleName>
+        <titleType>{{- otherTitleType -}}</titleType>
     </otherTitle>
 </otherTitles>
-{% endif %}
-{%- endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 
 {# 3. collective title
@@ -63,62 +63,62 @@ TODO
 #}
 
 {# 4. creators #}
-{% macro creator(author) -%}
+{%- macro creator(author) -%}
 <creator>
-    {% if author['lastname'] %}
+    {%- if author['lastname'] -%}
     <person>
-        <firstName>{{ author['firstname'] or None }}</firstName>
-        <lastName>{{ author['lastname'] or None }}</lastName>
-        {% if author['authorID'] %}
-            {% if author['authorID_Type'] == 'GND' %}
-                {% set uri = "http://d-nb.info/gnd/" ~ author['authorID'] %}
-            {% elif author['authorID_Type'] == 'ORCID' %}
-                {% set uri = "http://orcid.org/" ~ author['authorID'] %}
-            {% elif author['authorID_Type'] == 'Repec' %}
-                {% set uri = "https://ideas.repec.org/e/" ~ author['authorID'] ~ ".html" %}
-            {% elif author['authorID_Type'] == 'WoS' %}
-                {% set uri = "http://www.researcherid.com/rid/" ~ author['authorID'] %}
-            {% elif author['authorID_Type'] == 'Scopus' %}
-                {% set uri = "https://www.scopus.com/authid/detail.uri?authorId=" ~ author['authorID'] %}
-            {% else %}
-                {% set uri = "http://d-nb.info/gnd/" ~ author['authorID'] %}
-            {% endif %}
+        <firstName>{{- author['firstname'] or None -}}</firstName>
+        <lastName>{{- author['lastname'] or None -}}</lastName>
+        {%- if author['authorID'] -%}
+            {%- if author['authorID_Type'] == 'GND' -%}
+                {%- set uri = "http://d-nb.info/gnd/" ~ author['authorID'] -%}
+            {%- elif author['authorID_Type'] == 'ORCID' -%}
+                {%- set uri = "http://orcid.org/" ~ author['authorID'] -%}
+            {%- elif author['authorID_Type'] == 'Repec' -%}
+                {%- set uri = "https://ideas.repec.org/e/" ~ author['authorID'] ~ ".html" -%}
+            {%- elif author['authorID_Type'] == 'WoS' -%}
+                {%- set uri = "http://www.researcherid.com/rid/" ~ author['authorID'] -%}
+            {%- elif author['authorID_Type'] == 'Scopus' -%}
+                {%- set uri = "https://www.scopus.com/authid/detail.uri?authorId=" ~ author['authorID'] -%}
+            {%- else -%}
+                {%- set uri = "http://d-nb.info/gnd/" ~ author['authorID'] -%}
+            {%- endif -%}
             <personIDs>
                 <personID>
-                    <identifierURI>{{ uri }}</identifierURI>
+                    <identifierURI>{{- uri -}}</identifierURI>
                     <identifierSchema>
                         {%- if author['authorID_Type'] -%}
-                            {{ author['authorID_Type'] }}
+                            {{- author['authorID_Type'] -}}
                         {%- else -%}
                             GND
                         {%- endif -%}
                     </identifierSchema>
                 </personID>
             </personIDs>
-        {% endif %}
+        {%- endif -%}
         {# TODO condition einbauen, statt None #}
-        {% if author['affil'] or author['institution'] -%}
+        {%- if author['affil'] or author['institution'] -%}
         <affiliation>
             <affiliationName>
                 {%- if author['affil'] -%}
-                    {{ author['affil'] }}
+                    {{- author['affil'] -}}
                 {%- else -%}
-                    {{ author['institution'] }}
+                    {{- author['institution'] -}}
                 {%- endif -%}
             </affiliationName>
-            {% if author['affilID'] %}
-                {% set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] %}
+            {%- if author['affilID'] -%}
+                {%- set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] -%}
                 <affiliationIDs>
                     <affiliationID>
-                        <identifierURI>{{ aff_uri }}</identifierURI>
+                        <identifierURI>{{- aff_uri -}}</identifierURI>
                         <identifierSchema>GND</identifierSchema>
                     </affiliationID>
                 </affiliationIDs>
-            {% endif %}
+            {%- endif -%}
         </affiliation>
-        {%- endif %}
+        {%- endif -%}
     </person>
-    {% endif %}
+    {%- endif -%}
     {%- if author['institution'] and not author['lastname'] -%}
     <institution>
         <institutionName>
@@ -128,7 +128,7 @@ TODO
         {%- set aff_uri = "http://d-nb.info/gnd/" ~ author['affilID'] -%}
         <institutionIDs>
             <institutionID>
-                <identifierURI>{{ aff_uri }}</identifierURI>
+                <identifierURI>{{- aff_uri -}}</identifierURI>
                 <identifierSchema>GND</identifierSchema>
             </institutionID>
         </institutionIDs>
@@ -136,173 +136,173 @@ TODO
     </institution>
     {%- endif -%}
 </creator>
-{%- endmacro %}
+{%- endmacro -%}
 
 
 {# 8. URL, 9. DOI proposal #}
-{% macro doi(url, doi_proposal) -%}
+{%- macro doi(url, doi_proposal) -%}
 <dataURLs>
-    <dataURL>{{ url }}</dataURL>
+    <dataURL>{{- url -}}</dataURL>
 </dataURLs>
-<doiProposal>{{ doi_proposal }}</doiProposal>
-{%- endmacro %}
+<doiProposal>{{- doi_proposal -}}</doiProposal>
+{%- endmacro -%}
 
 
 {# for now pub date has only year #}
-{% macro publicationDate(year) -%}
+{%- macro publicationDate(year) -%}
 <publicationDate>
-    <year>{{ year }}</year>
+    <year>{{- year -}}</year>
 </publicationDate>
-{%- endmacro %}
+{%- endmacro -%}
 
 
 {# *28/29 availability controlled/free #}
-{% macro availability(type) -%}
+{%- macro availability(type) -%}
 <availability>
-    <availabilityType>{{ type }}</availabilityType> {# only Download here #}
+    <availabilityType>{{- type -}}</availabilityType> {# only Download here #}
 </availability>
-{%- endmacro %}
+{%- endmacro -%}
 
 {# 11. resource language #}
-{% macro resourceLanguage(lang) -%}
-{% if lang %}
-<resourceLanguage>{{ lang }}</resourceLanguage>
-{% endif %}
-{%- endmacro %}
+{%- macro resourceLanguage(lang) -%}
+{%- if lang -%}
+<resourceLanguage>{{- lang -}}</resourceLanguage>
+{%- endif -%}
+{%- endmacro -%}
 
 
 {# 13. alternative identifier
-{% macro alternativeIDs(id, type) -%}
-{% if id %}
+{%- macro alternativeIDs(id, type) -%}
+{%- if id -%}
 <alternativeIDs>
     <alternativeID>
-        <identifier>{{ id }}</identifier>
-        <type>{{ type }}</type>
+        <identifier>{{- id -}}</identifier>
+        <type>{{- type -}}</type>
     </alternativeID>
 </alternativeIDs>
-{% endif %}
-{%- endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 #}
 
 {# 14. JEL classification #}
-{% macro classification(jels) -%}
-{% if jels %}
+{%- macro classification(jels) -%}
+{%- if jels -%}
 <classifications>
     <classification>
         <classificationInternal>
             <classificationSchemaType>JEL</classificationSchemaType>
             <identifiers>
-                {% for jel in jels %}
-                <identifier>{{ jel }}</identifier>
-                {% endfor %}
+                {%- for jel in jels -%}
+                <identifier>{{- jel -}}</identifier>
+                {%- endfor -%}
             </identifiers>
         </classificationInternal>
     </classification>
 </classifications>
-{% endif %}
-{%- endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 {# author classification #}
-{% macro author_classification(tags) %}
-{% if tags %}
+{%- macro author_classification(tags) -%}
+{%- if tags -%}
 <freeKeywords>
     <freeKeyword>
         <language>en</language>
         <keywords>
-            {% for tag in tags %}
+            {%- for tag in tags -%}
                 <keyword>
                     {{- tag.display_name -}}
                 </keyword>
-            {% endfor %}
+            {%- endfor -%}
         </keywords>
     </freeKeyword>
 </freeKeywords>
-{% endif %}
-{% endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 {# 17. description #}
-{% macro description(text) -%}
-{% if text %}
+{%- macro description(text) -%}
+{%- if text -%}
 <descriptions>
     <description>
         <language>en</language> {# TODO: offer choices? #}
-        <freetext>{{ text }}</freetext>
+        <freetext>{{- text -}}</freetext>
         <descriptionType>Abstract</descriptionType> {# for now we assume type is always Abstract
                         TODO: offer choice #}
     </description>
 </descriptions>
-{% endif %}
-{%- endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 
 {# 18. geographic coverage controlled/free #}
 {# XXX controlled not implemented yet; can have multiple entries #}
-{% macro geographicCoverages(language, geocoverage, geocoverage_free) %}
-{% if geocoverage or geocoverage_free %}
+{%- macro geographicCoverages(language, geocoverage, geocoverage_free) -%}
+{%- if geocoverage or geocoverage_free -%}
 <geographicCoverages>
-    {% if geocoverage %}
-        {% set geocoverage = geocoverage.replace("[u'", "").replace("', u'", ",").replace("']", "") %}
-        {% if ',' in geocoverage %}
-            {% set geocoverage = geocoverage.split(',') %}
-        {% else %}
-            {% set geocoverage = [geocoverage] %}
-        {% endif %}
-        {% for value in geocoverage %}
+    {%- if geocoverage -%}
+        {%- set geocoverage = geocoverage.replace("[u'", "").replace("', u'", ",").replace("']", "") -%}
+        {%- if ',' in geocoverage -%}
+            {%- set geocoverage = geocoverage.split(',') -%}
+        {%- else -%}
+            {%- set geocoverage = [geocoverage] -%}
+        {%- endif -%}
+        {%- for value in geocoverage -%}
             <geographicCoverage>
-                <geographicCoverageControlled>{{ value }}</geographicCoverageControlled>
+                <geographicCoverageControlled>{{- value -}}</geographicCoverageControlled>
             </geographicCoverage>
-        {% endfor %}
-    {% endif %}
+        {%- endfor -%}
+    {%- endif -%}
 
-    {% if geocoverage_free %}
+    {%- if geocoverage_free -%}
     <geographicCoverage>
       <geographicCoveragesFree>
           <geographicCoverageFree>
-              <language>{{ language }}</language>
-              <freetext>{{ geocoverage_free }}</freetext>
+              <language>{{- language -}}</language>
+              <freetext>{{- geocoverage_free -}}</freetext>
           </geographicCoverageFree>
       </geographicCoveragesFree>
       {# <geoLocationPoint></geoLocationPoint> #}{#XXX not implemented #}
       {# <geoLocationBox></geoLocationBox> #} {#XXX not implemented yet #}
     </geographicCoverage>
-    {% endif %}
+    {%- endif -%}
 </geographicCoverages>
-{% endif %}
-{% endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 {# 19. sampled universe #}
-{% macro universes(lang, sampled) %}
-    {% if sampled %}
+{%- macro universes(lang, sampled) -%}
+    {%- if sampled -%}
     <universes>
         <universe>
-            <language>{{ lang }}</language> {# XXX not implemented #}
+            <language>{{- lang -}}</language> {# XXX not implemented #}
             {# we are using 'None' as fallback since
             the schema is not correct here. dara expects content, but schema
              does not force it #}
-            <sampled>{{ sampled }}</sampled>
+            <sampled>{{- sampled -}}</sampled>
         </universe>
     </universes>
-    {% endif %}
-{% endmacro %}
+    {%- endif -%}
+{%- endmacro -%}
 
 {# 20. sampling #}
-{% macro samplings(lang, method) %}
-    {% if method %}
+{%- macro samplings(lang, method) -%}
+    {%- if method -%}
     <samplings>
         {# 1 or 2 samplings allowed #}
         <sampling>
-            <language>{{ lang }}</language>
-            <method>{{ method }}</method>
+            <language>{{- lang -}}</language>
+            <method>{{- method -}}</method>
         </sampling>
     </samplings>
-    {% endif %}
-{% endmacro %}
+    {%- endif -%}
+{%- endmacro -%}
 
 {# 21.2 temporal coverage free #}
-{% macro temporalCoverageFree(tc, start, end, h) %}
-    {% if (tc) or (start) %}
+{%- macro temporalCoverageFree(tc, start, end, h) -%}
+    {%- if (tc) or (start) -%}
         <temporalCoverages>
-            {% if start %}
+            {%- if start -%}
             <temporalCoverage>
                 <temporalCoverageFormal>
                     <startDate>
@@ -317,70 +317,70 @@ TODO
                     </endDate>
                 </temporalCoverageFormal>
             </temporalCoverage>
-            {% endif %}
-            {% if tc %}
+            {%- endif -%}
+            {%- if tc -%}
             <temporalCoverage>
                 <temporalCoveragesFree>
                     <temporalCoverageFree>
                         <language>en</language>
-                        <freetext>{{ tc }}</freetext>
+                        <freetext>{{- tc -}}</freetext>
                     </temporalCoverageFree>
                 </temporalCoveragesFree>
             </temporalCoverage>
-            {% endif %}
+            {%- endif -%}
         </temporalCoverages>
-    {% endif %}
-{% endmacro %}
+    {%- endif -%}
+{%- endmacro -%}
 
 
 {# 27. notes #}
-{% macro note(note) %}
-{% if note %}
+{%- macro note(note) -%}
+{%- if note -%}
 <notes>
     <note>
         <language>en</language>
-        <text>{{ note }}</text>
+        <text>{{- note -}}</text>
     </note>
 </notes>
-{% endif %}
-{% endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
 
 {# 30. rights #}
-{% macro rights() %}
+{%- macro rights() -%}
 <rights>
     <right>
       <language>en</language>
       <freetext>Creative Commons Attribution 4.0 (CC-BY)</freetext>
     </right>
 </rights>
-{% endmacro %}
+{%- endmacro -%}
 
 {# 31. relation #}
-{% macro relation(identifier_type, identifier, relation_type) %}
+{%- macro relation(identifier_type, identifier, relation_type) -%}
 <relation>
-    <identifier>{{ identifier }}</identifier>
-    <identifierType>{{ identifier_type }}</identifierType>
-    <relationType>{{ relation_type }}</relationType>
+    <identifier>{{- identifier -}}</identifier>
+    <identifierType>{{- identifier_type -}}</identifierType>
+    <relationType>{{- relation_type -}}</relationType>
 </relation>
-{% endmacro %}
+{%- endmacro -%}
 
 {# 32 publications #}
 {# this is for the collection/journal only #}
-{% macro publication(pkg, identification) %}
+{%- macro publication(pkg, identification) -%}
 <publications>
     <publication>
-        {% if pkg.dara_Publication_PID %}
+        {%- if pkg.dara_Publication_PID -%}
         <unstructuredPublication>
             <freetext>pkg</freetext>
             <PIDs>
                 <PID>
-                    <ID>{{ pkg.dara_Publication_PID }}</ID>
-                    <pidType>{{ pkg.dara_Publication_PIDType }}</pidType>
+                    <ID>{{- pkg.dara_Publication_PID -}}</ID>
+                    <pidType>{{- pkg.dara_Publication_PIDType -}}</pidType>
                 </PID>
             </PIDs>
         </unstructuredPublication>
-        {% endif %}
+        {%- endif -%}
         {#
         <structuredPublication>
             <authorsEditors>
@@ -392,31 +392,31 @@ TODO
                 </authorEditor>
             </authorsEditors>
             <title>None</title>
-            <journal>{{ pkg.organization['title'] }}</journal>
-            <volume>{{ pkg.dara_Publication_Volume }}</volume>
-            <issue>{{ pkg.dara_Publication_Issue }}</issue>
-            <pages>p. {{ pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int }}</pages>
+            <journal>{{- pkg.organization['title'] -}}</journal>
+            <volume>{{- pkg.dara_Publication_Volume -}}</volume>
+            <issue>{{- pkg.dara_Publication_Issue -}}</issue>
+            <pages>p. {{- pkg.dara_Publication_EndPage|int - pkg.dara_Publication_StartPage|int -}}</pages>
 
-            {% if identification[1] == 'isbn' %}
+            {%- if identification[1] == 'isbn' -%}
                 <isbn>
-                    {{ identification[0] }}
+                    {{- identification[0] -}}
                 </isbn>
-            {% endif %}
+            {%- endif -%}
 
-            {% if identification[1] == 'issn' %}
+            {%- if identification[1] == 'issn' -%}
             <ISSNs>
-                <ISSN>{{ identification[0] }}</ISSN>
+                <ISSN>{{- identification[0] -}}</ISSN>
             </ISSNs>
-            {% endif %}
+            {%- endif -%}
         </structuredPublication>
         #}
     </publication>
 </publications>
-{% endmacro %}
+{%- endmacro -%}
 
 
 {# publisher [doesn't work in collections or resources] #}
-{% macro publisher() %}
+{%- macro publisher() -%}
 <publisher>
     <institution>
         <institutionName>ZBW - Leibniz Informationszentrum Wirtschaft</institutionName>
@@ -432,4 +432,4 @@ TODO
         </institutionIDs>
     </institution>
 </publisher>
-{% endmacro %}
+{%- endmacro -%}

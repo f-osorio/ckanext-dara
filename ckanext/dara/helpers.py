@@ -18,6 +18,7 @@ import requests
 from hurry.filesize import size, si
 from toolz.itertoolz import last
 import json
+import urlparse
 
 
 flash = _Flash()
@@ -33,7 +34,11 @@ def has_doi(pkg):
 
 
 def _get_id(type):
-    if 'urlvars' in dir(request):
+    if '/api/' in request.url:
+        # get id from URL
+        parsed = urlparse.urlparse(request.url)
+        id = urlparse.parse_qs(parsed.query)[type][0]
+    elif 'urlvars' in dir(request):
         id = request.urlvars[type]
     else:
         id = request.view_args[type]
@@ -97,13 +102,8 @@ def dara_resource():
     """
     somehow hack. c.resource doesnt return a resource when calling .../dara_xml
     """
-    # TODO improve this. We should somehow be able to get the type of the
-    # context (resource or package)
     try:
-        if 'resource' in request.path:
-            return tk.get_action('resource_show')(None, {'id': _get_id('resource_id')})
-        else:
-            return c.resource
+        return tk.get_action('resource_show')(None, {'id': _get_id('resource_id')})
     except:
         return False
 
@@ -151,10 +151,11 @@ def dara_authors(dara_type, data):
             for resource in pack['resources']:
                 try:
                     # Use the resource that matches the current page
-                    if resource['id'] == c.resource['id']:
+                    if resource['id'] == _get_id('resource_id'):
                         if 'dara_authors' in resource.keys():
                             v = resource['dara_authors']
-                except:
+                except Exception as e:
+                    print(e)
                     pass
         else:
             if 'dara_authors' in pack.keys():
@@ -169,7 +170,9 @@ def dara_authors(dara_type, data):
             if dct[0]['lastname'] == '' and dct[0]['institution'] == '':
                 # if the request is for XML return the collection data
                 # otherwise, return an empty string
-                if 'dara_xml' in request.path or 'dara_register' in request.path:
+                if 'dara_xml' in request.path \
+                    or 'dara_register' in request.path \
+                        or '/api/' in request.url:
                     return get_collection_data(data)
                 else:
                     return dct[:3]
