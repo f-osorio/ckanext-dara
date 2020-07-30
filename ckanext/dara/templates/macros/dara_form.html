@@ -95,7 +95,7 @@ Examples:
         {% if 'dara_required' in additional_classes %}
             {% do attrs.update({'required': 'required'}) %}
             {% if h.has_doi(h.dara_pkg()) %}
-              {% do attrs.update({'readonly': 'readonly'}) %}
+              {% do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) %}
             {% endif %}
         {% endif %}
 
@@ -110,6 +110,10 @@ Examples:
            {% do attrs.update({'class': 'select_geo', 'multiple': 'multiple',
             'style': 'width: 337px'
             }) %}
+        {% endif %}
+
+        {% if h.has_doi(h.dara_pkg()) %}
+            {% do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) %}
         {% endif %}
 
 
@@ -321,8 +325,9 @@ Examples:
   {% set upload_label = upload_label or _('Image')  %}
 
   {% if is_upload_enabled %}
-  <div class="image-upload" data-module="image-upload" data-module-is_url="{{ 'true' if is_url else 'false' }}" data-module-is_upload="{{ 'true' if is_upload else 'false' }}"
-       data-module-field_url="{{ field_url }}" data-module-field_upload="{{ field_upload }}" data-module-field_clear="{{ field_clear }}" data-module-upload_label="{{ upload_label }}">
+  <div class="image-upload" data-module="image-upload" data-module-is_url="{{ 'true' if is_url else 'false' }}"
+       data-module-is_upload="{{ 'true' if is_upload else 'false' }}" data-module-field_url="{{ field_url }}"
+       data-module-field_upload="{{ field_upload }}" data-module-field_clear="{{ field_clear }}" data-module-upload_label="{{ upload_label }}">
   {% endif %}
 
   {{ form.input(field_url, label=url_label, id='field-image-url', placeholder=placeholder, value=data.get(field_url), error=errors.get(field_url), classes=['control-full'], attrs=attrs) }}

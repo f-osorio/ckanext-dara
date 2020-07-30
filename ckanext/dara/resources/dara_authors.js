@@ -211,14 +211,14 @@ function clear_aff_id(inp){
 $(function add_authors() {
     var authorContainer = $('#authors');
     $('#add_author').on('click', function() {
-
+        console.log('Adding Author Fields');
         $('.hidden_authorfield')
             .clone(true, true)
             .prop('class', 'author')
-            .removeProp('disabled')
+            .removeAttr('disabled')
             .appendTo(authorContainer)
         $(master_slave_input());  // XXX bad!  dara.js
-        ws_names_init();  // TODO: add eventlistener with function
+        ws_names_init();          // TODO: add eventlistener with function
         ws_affil_init();
         return false;
     });

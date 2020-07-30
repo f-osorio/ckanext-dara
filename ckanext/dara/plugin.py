@@ -22,6 +22,9 @@ from ckan.logic.action.create import package_create as ckan_package_create
 from ckan.logic.action.update import package_update as ckan_package_update
 from ckanext.edawax.helpers import is_author
 
+from flask import Blueprint
+import ckanext.dara.views as v
+
 
 PREFIX = 'dara_'
 
@@ -110,25 +113,11 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IDatasetForm, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
-    plugins.implements(plugins.IRoutes, inherit=True)
+    #plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IActions)
-
-
-
-   #def before_create(self, context, resource):
-   #
-   #    def get_pkg():
-   #        return tk.get_action('package_show')(context, {'id': context['package'].id})
-   #    import ipdb; ipdb.set_trace()
-
-    # def after_update(self, context, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
-    # def before_view(self, pkg_dict):
-        # import ipdb; ipdb.set_trace()
-
+    plugins.implements(plugins.IBlueprint)
 
     def show_package_schema(self):
         schema = deepcopy(super(DaraMetadataPlugin, self).show_package_schema())
@@ -158,7 +147,7 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'normalize_issue_string': validators.normalize_issue_string,
                 'jel_convert': validators.jel_convert,
                 'dates': validators.dates,
-                'dara_doi_validator': validators.dara_doi_validator,
+                'dara_doi_validator': validators.dara_doi_validator
                 }
 
     def get_actions(self):
@@ -209,45 +198,31 @@ class DaraMetadataPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return []
 
 
-    def before_map(self, map):
-        """
-        """
-        # map.connect() accepts arbitrary **kw and *args. That's why
-        # we can add the template for the calls of the controller here
+    def get_blueprint(self):
+        daraBP = Blueprint(u'dara', self.__module__, url_prefix=u"/dataset")
 
-        map.connect('/dataset/{id}/dara_xml',
-                controller="ckanext.dara.controller:DaraController",
-                action='xml',
-                template='package/collection.xml',)
+        daraBP.add_url_rule(u'/<id>/dara_xml',
+                           view_func=v.xml,
+                           methods=[u'GET', u'POST'])
 
-        map.connect('/dataset/{id}/resource/{resource_id}/dara_xml',
-                controller="ckanext.dara.controller:DaraController",
-                action='xml',
-                template='package/resource.xml')
+        daraBP.add_url_rule(u'/<id>/resource/<resource_id>/dara_xml',
+                           view_func=v.xml,
+                           methods=[u'GET', u'POST'])
 
-        map.connect('/dataset/{id}/dara_register',
-                controller="ckanext.dara.controller:DaraController",
-                action="register",
-                template="package/collection.xml",)
+        daraBP.add_url_rule(u'/<id>/dara_register',
+                           view_func=v.register,
+                           methods=[u'GET', u'POST'])
 
-        map.connect('dara_doi', '/dataset/edit/{id}/dara_doi',
-                controller="ckanext.dara.controller:DaraController",
-                action="doi",
-                template="package/doi.html",
-                ckan_icon="exchange")
+        daraBP.add_url_rule(u'/edit/<id>/dara_doi',
+                           view_func=v.doi,
+                           methods=[u'GET', u'POST'])
 
-        map.connect('/dataset/{id}/resource/{resource_id}/download/{filename}',
-                controller="ckanext.dara.controller:DaraController",
-                action="resource_download")
+        daraBP.add_url_rule(u'/<id>/resource/<resource_id>/download/<filename>',
+                           view_func=v.resource_download,
+                           methods=[u'GET', u'POST'])
 
-        # force download for text files
-        map.connect('/dataset/{id}/resource/{resource_id}/download/{filename}',
-                controller="ckanext.dara.controller:DaraController",
-                action="resource_download")
+        daraBP.add_url_rule(u'/state/<pkg_id>',
+                           view_func=v.cancel,
+                           methods=[u'GET', u'POST'])
 
-        # change package state
-        map.connect('/dataset/state/{pkg_id}',
-                     controller="ckanext.dara.controller:DaraController",
-                     action="cancel")
-
-        return map
+        return daraBP

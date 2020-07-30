@@ -3,14 +3,16 @@
 # ZBW - Leibniz Information Centre for Economics
 
 from ckan.lib.helpers import _Flash
+from ckan.lib.helpers import url_for
 import ckan.plugins.toolkit as tk
-from ckan.common import c, request
+from ckan.common import g, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
-from pylons import config
+#from pylons import config
+from ckan.common import config
 import json
-from ckan.new_authz import users_role_for_group_or_org
+from ckan.authz import users_role_for_group_or_org
 from ckan import model
 import requests
 from hurry.filesize import size, si
@@ -30,7 +32,16 @@ def has_doi(pkg):
     return True
 
 
-def dara_pkg(id=None):
+def _get_id(type):
+    if 'urlvars' in dir(request):
+        id = request.urlvars[type]
+    else:
+        id = request.view_args[type]
+
+    return id
+
+
+def dara_pkg(id=None, type='id'):
     """
     get package for several helper functions
     XXX DO WE REALLY NEED THIS?
@@ -39,7 +50,11 @@ def dara_pkg(id=None):
         pkg = tk.get_action('package_show')(None, {'id': id})
         return pkg
 
-    pkg_id = tk.c.id
+    try:
+        pkg_id = _get_id(type)
+    except:
+        return False
+
     try:
         pkg = tk.get_action('package_show')(None, {'id': pkg_id})
     except:
@@ -63,7 +78,7 @@ def dara_auto_fields():
         site_url = "http://edawax.de"
 
     if pkg:
-        pkg_url = tk.url_for(controller='package', action='read', id=pkg['name'])
+        pkg_url = url_for(controller='package', action='read', id=pkg['name'])
     else:
         pkg_url = ''
     dara_url = site_url + pkg_url
@@ -86,7 +101,7 @@ def dara_resource():
     # context (resource or package)
     try:
         if 'resource' in request.path:
-            return tk.get_action('resource_show')(None, {'id': c.resource_id})
+            return tk.get_action('resource_show')(None, {'id': _get_id('resource_id')})
         else:
             return c.resource
     except:
@@ -134,10 +149,8 @@ def dara_authors(dara_type, data):
         pack = data or dara_pkg()
         if 'resources' in pack.keys():
             for resource in pack['resources']:
-                if resource['id'] == c.resource_id:
-                    if 'dara_authors' in resource.keys():
-                        v = resource['dara_authors']
                 try:
+                    # Use the resource that matches the current page
                     if resource['id'] == c.resource['id']:
                         if 'dara_authors' in resource.keys():
                             v = resource['dara_authors']

@@ -22,10 +22,6 @@ import paste.fileapp
 import mimetypes
 
 
-# imports for new download function
-import os
-import ckan.lib.uploader as uploader
-import paste.fileapp
 import mimetypes
 
 import xml.etree.ElementTree as ET
@@ -135,6 +131,7 @@ class DaraController(PackageController):
         xmlschema = etree.XMLSchema(xmlschema_doc)
         doc = etree.parse(StringIO(xml_string))
         xmlschema.assertValid(doc)
+
         return xml_string
 
     def doi(self, id, template):

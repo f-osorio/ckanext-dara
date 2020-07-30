@@ -12,7 +12,7 @@
 
     {% if h.has_doi(h.dara_pkg()) %}
         {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
-            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """, 'readonly': 'readonly'} %}
+            'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """, 'readonly': 'readonly', 'disabled': 'disabled'} %}
     {% else %}
         {% set attrs = {'data-module': 'slug-preview-target', 'required':'required',
             'data-infotext': """We recommend using the title of your research article followed by '(replication data)'. """} %}
@@ -33,18 +33,20 @@
         {% set domain = h.url_for(controller='package', action='read',
                                     id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-        {% resource 'dara/preview-slug-new.js' %}
+
+        {#% resource 'dara/preview-slug-new.js' %#}
         {% if h.has_doi(h.dara_pkg()) %}
             {% set attrs = {
-                'data-module': 'preview-slug-new',
+                'data-module': 'slug-preview-slug',
                 'data-module-prefix': domain,
                 'data-module-placeholder': '<dataset>',
-                'readonly': 'readonly'
+                'readonly': 'readonly',
+                'disabled': 'disabled'
                 }
             %}
         {% else %}
             {% set attrs = {
-                'data-module': 'preview-slug-new',
+                'data-module': 'slug-preview-slug',
                 'data-module-prefix': domain,
                 'data-module-placeholder': '<dataset>',
                 }
@@ -59,12 +61,18 @@
             error=errors.name,
             attrs=attrs) }}
 
+        {% set attrs = {"data-infotext": """Please provide information about the files you are submitting (eg. copy from any readme files you have)."""} %}
+
+        {% if h.has_doi(h.dara_pkg()) %}
+            {% do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) %}
+        {% endif %}
+
         {{ form.markdown('notes', id='field-notes',
             label=_('Description'),
             placeholder=_('Abstract or similiar'),
             value=data.notes,
             error=errors.notes,
-            attrs={"data-infotext": """Please provide information about the files you are submitting (eg. copy from any readme files you have)."""}
+            attrs=attrs
             )
         }}
 
@@ -88,6 +96,10 @@
             'data-infotext': """Please enter the keywords from your abstract."""
             }
         %}
+        {% if h.has_doi(h.dara_pkg()) %}
+            {% do tag_attrs.update({'readonly': 'readonly', 'disabled':'disabled' }) %}
+        {% endif %}
+
         {{ form.input('tag_string', id='field-tags',
             label=_('Keywords'),
             placeholder=_('eg. economy, mental health, government'),
@@ -141,9 +153,9 @@
     {% set existing_org = data.owner_org or data.group_id %}
 
     {# original org-selector:
-    or data.get('state', 'draft').startswith('draft')
-    or data.get('state', 'none') ==  'none'
-    %}
+        or data.get('state', 'draft').startswith('draft')
+        or data.get('state', 'none') ==  'none'
+        %}
     #}
       {% set organizations_available = h.organizations_available('create_dataset') %}
           {% if organizations_available %}
@@ -157,7 +169,7 @@
                     <select id="field-organizations" name="owner_org"
                         data-module="autocomplete"
                         data-infotext="Select the Journal your article was published in."
-                        >
+                        {% if h.has_doi(h.dara_pkg()) %}readonly="readonly" disabled="disabled"{% endif %}>
                     <option value=""
                         {% if not selected_org and data.id %}
                             selected="selected"
@@ -179,9 +191,9 @@
             {% endif %}
         {% endif %}
 
-{% if is_admin %}
-       {{ dara_form.md('publication', h, data, errors) }}
-{% endif %}
+        {% if is_admin %}
+            {{ dara_form.md('publication', h, data, errors) }}
+        {% endif %}
       </fieldset>
     </div>
 

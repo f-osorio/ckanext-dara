@@ -60,8 +60,15 @@
 
     </fieldset>
 
-    <p style="margin-bottom:25px; margin-left:-25px;"><a href="#" class="btn" id="add_author">
-    Add {{ who }}</a> </p>
+    <p style="margin-bottom:25px; margin-left:-25px;">
+        {% if h.has_doi(h.dara_pkg()) %}
+            <a href="#" class="btn" id="add_author" style="pointer-events:none;cursor: default;">
+        {% else %}
+            <a href="#" class="btn" id="add_author">
+        {% endif %}
+            Add {{ who }}
+        </a>
+    </p>
 
     </div>
 {%- endmacro %}
@@ -84,13 +91,17 @@
         {% do classes.append('hidden_authorfield') %}
     {% endif %}
     <fieldset class="author{{ " " ~ classes|join(' ') }}" {{ disabled }}>
-
         {% if index > 1 %}
-            <div><a href="#" class="dara_red remove_author" title="Remove
-            Author">[x]</a></div>
-        <label>{{ who }}</label>
+            <div>
+                {% if h.has_doi(h.dara_pkg()) %}
+                    <a href="#" class="dara_red remove_author" title="Remove Author" style="pointer-events:none;cursor: default;">[x]</a>
+                {% else %}
+                    <a href="#" class="dara_red remove_author" title="Remove Author">[x]</a>
+                {% endif %}
+            </div>
+            <label>{{ who }}</label>
         {% else %}
-        <label class="required">{{ who }}</label>
+            <label class="required">{{ who }}</label>
         {% endif %}
 
     {% for field in fields %}
@@ -127,7 +138,7 @@
         #}
 
         {% if h.has_doi(h.dara_pkg()) %}
-            {% do attrs.update({'readonly': 'readonly'}) %}
+            {% do attrs.update({'readonly': 'readonly', 'disabled': 'disabled'}) %}
         {% endif %}
 
 
@@ -193,17 +204,15 @@
             {% do classes.append('ui-widget') %}
             {% do classes.append('select') %}
             {{ form.select(name,
-                label = label,
-                options = options,
-                error=errors.id,
-                selected=selected,
-                classes=classes,
-                attrs=attrs,
-                )
-
+                            label = label,
+                            options = options,
+                            error=errors.id,
+                            selected=selected,
+                            classes=classes,
+                            attrs=attrs,
+                          )
             }}
         {% endif %}
-
 
         {% if widget.size == 'medium' %}
             {% do classes.append('control-medium') %}
@@ -213,21 +222,11 @@
             {% do classes.append('control-small') %}
         {% endif %}
 
-
-
-
-       {#XXX this works only when there's only one slave! #}
+        {#XXX this works only when there's only one slave! #}
         {% if widget.role == 'slave' %}
             </fieldset>
         {% endif %}
 
-
-
      {% endfor %}
-
-
-
- </fieldset>
- {% endmacro %}
-
-
+</fieldset>
+{% endmacro %}

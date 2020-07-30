@@ -2,13 +2,8 @@
 // Truncates titles > 99 characters to be 90
 // by cutting out the middine of the title.
 // The code originaed in `plugins/jquery.slug-preview.js`
-// and `modules/slug-preview.js`
-//
-// -- Duplicated from /resources because DEV & Test/Prod have slightly different needs
-
-/*
- * TODO: make sure this works when long strings are pasted in
- */
+// and `modules/slug-preview.js` this is a mashup of the two into
+// one module
 "use-strict";
 
 

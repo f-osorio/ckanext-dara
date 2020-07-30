@@ -197,7 +197,7 @@ dara_updated_test: {{ pkg['dara_updated_test'] }}
             {% elif use_testserver and res['dara_DOI_Test'] %}
                 DOI (Test): <span style="color:darkorange">{{ res['dara_DOI_Test'] }}</span>
             {% else %}
-                DOI Proposal: {{ h.res_doi(res, pkg, journal_name) }}
+                DOI Proposal: {{ h.res_doi(res) }}
             {% endif %}
 
             {% if isSysadmin %}

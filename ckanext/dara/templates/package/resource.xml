@@ -119,7 +119,13 @@ dara expects content, but schema does not force it #}
             <files>
                 <file>
                     <name>{{ fileinfo.filename }}</name>
-                    <format>{{ res.format }}</format>
+                    <format>
+                        {%- if res.format -%}
+                            {{ res.format }}
+                        {%- else -%}
+                            txt
+                        {%- endif -%}
+                    </format>
                     <size>{{ fileinfo.filesize }}</size>
                 </file>
             </files>
