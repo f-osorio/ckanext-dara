@@ -5,8 +5,12 @@ from collections import namedtuple
 from datetime import datetime
 import geography_coverage as geo
 
-# TODO: make field selection/config runtime-editable (instead of commenting
-# them out)
+# DONE: make field selection/config runtime-editable (instead of commenting them out)
+"""
+This was implementing in branch `0dc506346ae9fdda51dda550c4d93a3c8f8a9f7d` but
+isn't worth implementing. The fields currently in place are based on the DARA
+metadata schema. There's no benefit to making it runtime configurable.
+"""
 
 
 # Widgets are designed as subclasses of DaraWidget
@@ -120,42 +124,6 @@ def fields():
             ),
         ),
 
-
-      # DaraField('Availabilityfree',
-      #     ('dataset'), ('ignore_missing',),
-
-      #     Input(
-      #         name = 'Availability (free)',
-      #         size = 'medium',
-      #         placeholder = 'eg. Die Datennutzung unterliegt schriftlichen Datenschutzvereinbarungen',
-      #         )
-      #     ),
-
-
-       #DaraField('OtherTitle',
-       #    ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-       #    Input(
-       #    placeholder = 'eg. Subtitle, alternative title',
-       #    role = 'master',
-       #    name = 'Other Title',
-       #    size = 'medium',
-       #    )
-       #),
-
-       #DaraField('OtherTitleType',
-       #    ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-       #    Select(
-       #    role = 'slave',
-       #    name = 'Type of other Title',
-       #    options = [
-       #        {'text': 'Alternative Title', 'value': '1'},
-       #        {'text': 'Translated Title', 'value': '2'},
-       #        {'text': 'Subtitle', 'value': '3'},
-       #        {'text': 'Original Title', 'value': '4'}],
-       #    )
-       #),
-
-
         DaraField('currentVersion',
                 ('dataset', 'data', 'code'), ('not_empty',),
                 Input(
@@ -167,75 +135,6 @@ def fields():
                 )
         ),
 
-        # language is ALWAYS supposed to be "English"
-       #DaraField('language',
-       #            ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-       #        Select(
-       #        name = 'Language',
-       #        options = [
-       #            {'text': 'English', 'value': 'eng'},
-       #            {'text': 'Belarusian', 'value': 'bel'},
-       #            {'text': 'Bosnian', 'value': 'bos'},
-       #            {'text': 'Czech', 'value': 'cze'},
-       #            {'text': 'Dutch', 'value': 'dut'},
-       #            {'text': 'Estonian', 'value': 'est'},
-       #            {'text': 'Finnish', 'value': 'fin'},
-       #            {'text': 'French', 'value': 'fre'},
-       #            {'text': 'German', 'value': 'ger'},
-       #            {'text': 'Greek', 'value': 'gre'},
-       #            {'text': 'Croatian', 'value': 'hrv'},
-       #            {'text': 'Hungarian', 'value': 'hun'},
-       #            {'text': 'Italian', 'value': 'ita'},
-       #            {'text': 'Latvian', 'value': 'lav'},
-       #            {'text': 'Lithuanian', 'value': 'lit'},
-       #            {'text': 'Norwegian', 'value': 'nor'},
-       #            {'text': 'Polish', 'value': 'pol'},
-       #            {'text': 'Romanian', 'value': 'rum'},
-       #            {'text': 'Russian', 'value': 'rus'},
-       #            {'text': 'Slovak', 'value': 'slo'},
-       #            {'text': 'Slovenian', 'value': 'slv'},
-       #            {'text': 'Spanish', 'value': 'spa'},
-       #            {'text': 'Serbian', 'value': 'srp'},
-       #            {'text': 'Swedish', 'value': 'swe'},
-       #            {'text': 'Ukrainian', 'value': 'ukr'}],
-       #        )
-       #),
-
-        #XXX deselected
-       #DaraField('AlternativeIdentifier_ID',
-       #     ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Input(
-       #        placeholder = 'eg. ISBN, Handle, DOI',
-       #        role = 'master',
-       #        name = 'Alternative Identifier',
-       #        )
-       #),
-       #DaraField('AlternativeIdentifier_Type',
-       #         ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Select(
-       #        role = 'slave',
-       #        name = 'Type of Alternative Identifier',
-       #        options = [
-       #            {'text': ''},
-       #            {'text': 'DOI', 'value': 'DOI'},
-       #            {'text': 'ARK', 'value': 'ARK'},
-       #            {'text': 'EAN13', 'value': 'EAN13'},
-       #            {'text': 'EISSN', 'value': 'EISSN'},
-       #            {'text': 'Handle', 'value': 'Handle'},
-       #            {'text': 'ISBN', 'value': 'ISBN'},
-       #            {'text': 'ISSN', 'value': 'ISSN'},
-       #            {'text': 'ISTC', 'value': 'ISTC'},
-       #            {'text': 'LISSN', 'value': 'LISSN'},
-       #            {'text': 'LSID', 'value': 'LSID'},
-       #            {'text': 'PURL', 'value': 'PURL'},
-       #            {'text': 'UPC', 'value': 'UPC'},
-       #            {'text': 'URL', 'value': 'URL'},
-       #            {'text': 'URN', 'value': 'URN'}],
-       #        )
-       #),
-
        DaraField('geographicCoverage',
                 ('data',), ('ignore_missing', 'jel_convert',),
                Select(
@@ -244,7 +143,6 @@ def fields():
                options = geo.geo,
                )
        ),
-
 
         DaraField('geographicCoverageFree',
                  ('data',), ('ignore_missing',),
@@ -257,7 +155,6 @@ def fields():
                 )
         ),
 
-
         DaraField('universeSampled',
                 ('data',), ('ignore_missing',),
                 Input(
@@ -269,17 +166,6 @@ def fields():
                 China, foreign students in Canada,...).""",
                 )
         ),
-
-
-       #DaraField('Sampling',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',)
-
-       #        Text(
-       #        placeholder = 'Describe your selection method',
-       #        name = 'Sampling',
-       #        )
-       #),
-
 
         DaraField('temporalCoverageFormal',
                 ('data',), ('ignore_missing',),
@@ -299,14 +185,6 @@ def fields():
                     )
         ),
 
-        #DaraField('temporalCoverageFormal',
-        #        ('data',), ('ignore_missing',),
-        #        Date(
-        #            classes= [],
-        #            name = "Temporal Coverage (Formal)",
-        #            )
-        #),
-
         DaraField('temporalCoverageFree',
                 ('data',), ('ignore_missing',),
                 Input(
@@ -318,130 +196,6 @@ def fields():
                     period (e.g. 2004-2008).""",
                     )
         ),
-
-        #TODO erstmal raus wegen; JS Date Widget finden
-       #DaraField('CollectionDate_controlled',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-
-       #        Date(
-       #        classes = ['todo'],
-       #        name = 'Collection Date (controlled)',
-       #        )
-       #),
-
-       #XXX obsolete
-       #DaraField('CollectionDate_free',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Input(
-       #        placeholder = 'eg. Spring 1999',
-       #        name = 'Collection Date (free)',
-       #        size = 'medium',
-       #        )
-       #),
-
-
-       #XXX Collection Mode not selected
-       #DaraField('CollectionMode_controlled',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Select(
-       #        name = 'Collection Mode (controlled)',
-       #        options = [
-       #            {'text': '', 'value': ''},
-       #            {'text': 'Interview', 'value': '1'},
-       #            {'text': 'Interview: Face-to-Face', 'value': '2'},
-       #            {'text': 'Interview: Telephone', 'value': '3'},
-       #            {'text': 'Interview: E-Mail', 'value': '4'},
-       #            {'text': 'Interview: CATI', 'value': '5'},
-       #            {'text': 'Interview: CAPI', 'value': '6'},
-       #            {'text': 'Self-completed questionnaire', 'value': '7'},
-       #            {'text': 'Self-completed questionnaire: Paper/Pencil', 'value': '8'},
-       #            {'text': 'Self-completed questionnaire: Web-based', 'value': '9'},
-       #            {'text': 'Self-completed questionnaire: CASI', 'value': '10'},
-       #            {'text': 'Self-completed questionnaire: ACASI', 'value': '11'},
-       #            {'text': 'Coding', 'value': '12'}, {'text': 'Transcription', 'value': '13'},
-       #            {'text': 'Compilation', 'value': '14'},
-       #            {'text': 'Synthesis', 'value': '15'},
-       #            {'text': 'Recording', 'value': '16'},
-       #            {'text': 'Simulation', 'value': '17'},
-       #            {'text': 'Observation', 'value': '18'},
-       #            {'text': 'Observation: Field', 'value': '19'},
-       #            {'text': 'Observation: Laboratory', 'value': '20'},
-       #            {'text': 'Observation: Participant', 'value': '21'},
-       #            {'text': 'Experiments', 'value': '22'},
-       #            {'text': 'Focus Group', 'value': '23'},
-       #            {'text': 'Other', 'value': '24'}],
-       #        )
-       #),
-
-       #DaraField('CollectionMode_free',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Input(
-       #        placeholder = 'eg. Interview',
-       #        name = 'Collection Mode (free)',
-       #        size = 'medium',
-       #        )
-       #),
-
-        #XXX timedimension fields not selected
-       #DaraField('TimeDimension_controlled',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Select(
-       #        name = 'Time Dimension (controlled)',
-       #        options = [
-       #            {'text': '', 'value': ''},
-       #            {'text': 'Longitudinal ', 'value': '1'},
-       #            {'text': 'Longitudinal.CohortEventBased ', 'value': '2'},
-       #            {'text': 'Longitudinal.TrendRepeatedCrossSection ', 'value': '3'},
-       #            {'text': 'Longitudinal.Panel ', 'value': '4'},
-       #            {'text': 'Longitudinal.Panel.Continuous', 'value': '5'},
-       #            {'text': 'Longitudinal: Panel: Interval', 'value': '6'},
-       #            {'text': 'Time Series', 'value': '7'},
-       #            {'text': 'TimeSeries: Continuous', 'value': '8'},
-       #            {'text': 'TimeSeries: Discrete', 'value': '9'},
-       #            {'text': 'Cross-section', 'value': '10'},
-       #            {'text': 'Cross-section ad-hoc follow-up', 'value': '11'},
-       #            {'text': 'Other', 'value': '12'}],
-       #        )
-       #),
-
-       #DaraField('TimeDimension_free',
-       #        ('dataset', 'data', 'text', 'code'), ('ignore_missing',),
-
-       #        Input(
-       #        placeholder = 'eg. Zeitreihe',
-       #        name = 'Time Dimension (free)',
-       #        size = 'medium',
-       #        )
-       #),
-
-      # DaraField('Frequency',
-      #         ('dataset', 'data', 'text', 'code'),
-
-      #         Input(
-      #             name='Frequency',
-      #             placeholder="eg. weekly, monthly",
-      #             )
-      # ),
-
-
-        #XXX taken out
-      # DaraField('Rights',
-      #         ('dataset'), ('ignore_missing',),
-
-      #         Input(
-      #         placeholder = 'eg. Copyright Joe Biggs',
-      #         name = 'Rights',
-      #         size = 'medium',
-      #         )
-      # ),
-
-
-
 
         DaraField('numberUnits',
            ('data',), ('ignore_missing',),
@@ -500,63 +254,6 @@ def fields():
             )
         ),
 
-        #DaraField('dataType',
-        #    ('data',), ('ignore_missing',),
-
-        #    Input(
-        #    name = 'Type of Data',
-        #    placeholder= '',
-        #    info=u""" In this field we kindly ask you to provide some
-        #    information on the type of data. For instance, it can be a
-        #    longitudinal study, a cross-sectional study, experimental data, or
-        #    something other.""",
-        #    )
-        #),
-
-        # technical file data; format is retrieved from CKAN
-        # XXX done by h.fileinfo()
-       #DaraField('file_size',
-       #    ('data', 'text', 'code'), ('ignore_missing',),
-
-       #    Input(
-       #    name = 'File Size (MB)',
-       #    size = 'small',
-       #    classes=['todo'],
-       #    placeholder='will be calculated automatically',
-       #    )
-       #),
-
-      #DaraField('file_fingerprint',
-      #     ('data', 'text', 'code'),  ('ignore_missing',),
-
-      #     Input(
-      #     role = 'master',
-      #     name = 'Data Fingerprint',
-      #     placeholder='eg. 00994e0caa89bc6bf394c12d9a2e72e6',
-      #     )
-      # ),
-
-      # DaraField('file_fingerprintMethod',
-      #     ('data', 'text', 'code'),  ('ignore_missing',),
-
-      #     Input(
-      #     role = 'slave',
-      #     name = 'Method Fingerprint',
-      #     size = 'small',
-      #     placeholder='eg. MD5'
-      #     )
-      # ),
-
-        # DaraField('note',
-        #         ('data', 'code'), ('ignore_missing',),
-        #         Text(
-        #         placeholder = 'any additional notes',
-        #         name = 'Additional Notes',
-        #         info=u"""Please provide any additional remarks regarding your dataset
-        #         (free text field).""",
-        #         )
-        # ),
-
         DaraField('jda_submission_id',
             ('dataset',), ('ignore_missing',),
             Input(
@@ -577,58 +274,6 @@ def fields():
                 ),
 
         ),
-
-
-
-###### publication fields start here, not separated anymore #############
-
-
-      # DaraField('Publication_Author',
-      #         ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-      #         Input(
-      #         name = 'Author of Publication',
-      #         size = 'medium',
-      #         )
-      # ),
-
-      # DaraField('Publication_Editor',
-      #         ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-      #         Input(
-      #         name = 'Editor',
-      #         size = 'medium',
-      #         )
-      # ),
-
-      # DaraField('Publication_Title',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #     Input(
-      #         name = 'Title of Publication',
-      #         size = 'medium',
-      #         )
-      # ),
-
-      # DaraField('Publication_Year',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #     Input(
-      #         name = 'Year of Publication',
-      #         )
-      # ),
-
-      # DaraField('Publication_Publisher',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #     Input(
-      #         name = 'Publisher',
-      #         size = 'medium',
-      #         )
-      # ),
 
         # XXX out as long we have edawax_url. we need a mechanism for transferring
         # the old url value to this field
@@ -657,25 +302,6 @@ def fields():
                 )
         ),
 
-      # DaraField('Publication_Place',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Input(
-      #         name = 'Place',
-      #         )
-      # ),
-
-      # DaraField('Publication_Journal',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Input(
-      #         name = 'Journal',
-      #         size = 'medium',
-      #         )
-      # ),
-
         DaraField('Publication_Volume',
             ('publication',), ('ignore_missing',),
 
@@ -700,27 +326,6 @@ def fields():
                 )
         ),
 
-      # DaraField('Publication_Anthology',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Input(
-      #         name = 'Anthology',
-      #         size = 'medium',
-      #         )
-      # ),
-
-     #  DaraField('Publication_Pages',
-     #      ('publication',), ('ignore_missing',),
-
-
-     #          Input(
-     #          name = 'Pages',
-     #          size = 'small',
-     #          classes = ['dara_required'],
-     #          )
-     #  ),
-
         DaraField('Publication_StartPage',
             ('publication',), ('ignore_missing',),
                 Number(
@@ -744,59 +349,6 @@ def fields():
                 number as it appears in the PDF file"""
                 )
         ),
-
-
-
-
-      # DaraField('Publication_ISBN',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Input(
-      #         name = 'ISBN',
-      #         size = 'small',
-      #         )
-      # ),
-
-      # DaraField('Publication_ISSN',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Input(
-      #         name = 'ISSN',
-      #         size = 'small',
-      #         )
-      # ),
-
-      # DaraField('Publication_RelationType',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Text(
-      #         name = 'Relation Type',
-      #         )
-      # ),
-
-      # DaraField('Publication_DocType',
-      #     ('dataset', 'data', 'text', 'code', 'publication'), ('ignore_missing',),
-
-
-      #         Select(
-      #         name = 'Document Type',
-      #         options = [
-      #             {'text': '', 'value': ''},
-      #             {'text': 'Working Paper', 'value': '1'},
-      #             {'text': 'Article', 'value': '2'},
-      #             {'text': 'Report', 'value': '3'},
-      #             {'text': 'Book/Monograph', 'value': '4'},
-      #             {'text': 'Manuscript', 'value': '5'},
-      #             {'text': 'Reference Book', 'value': '6'},
-      #             {'text': 'Review', 'value': '7'},
-      #             {'text': 'Series', 'value': '8'},
-      #             {'text': 'Journal', 'value': '9'},
-      #             {'text': 'Magazine', 'value': '10'}],
-      #         )
-      # ),
 
     )
 
@@ -851,23 +403,6 @@ def author_fields():
                 info=u""".""",
                 ),
             ),
-
-        # For the time being, all IDS are assumed to be GND
-        #AuthorField('affID_Type',
-        #        Select(
-        #        name = 'ID Type',
-        #        options = [
-        #            {'text': '', 'value': ''},
-        #            {'text': 'GND', 'value': 'GND'},
-        #            {'text': 'ORCID', 'value': 'ORCID'},
-        #            {'text': 'Scopus', 'value': 'Scopus'},
-        #            {'text': 'RePEc', 'value': 'Repec'},
-        #            {'text': 'Web of Science', 'value': 'WoS'}
-        #        ],
-        #        classes = ['no_display'],
-        #        info=u""".""",
-        #        ),
-        #),
 
         AuthorField('url',
             Input(
