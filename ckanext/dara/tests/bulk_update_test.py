@@ -5,7 +5,7 @@ import webtest
 import xmltodict
 import ckan.model as model
 from ckan.tests import helpers
-import pylons.config as config
+from ckan.common import config
 from ckan.lib.helpers import url_for
 import pylons.test, pylons, pylons.config as c, ckan.model as model, ckan.tests as tests, ckan.plugins as plugins, ckan.tests.factories as factories
 

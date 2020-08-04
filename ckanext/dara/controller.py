@@ -48,7 +48,6 @@ class DaraController(PackageController):
                 'user': c.user or c.author, 'for_view': True,
                 'auth_user_obj': c.userobj}
 
-    # TODO do this as decorator, as in edawax.controller
     def _check_access(self, id):
         context = self._context()
         pkg = tk.get_action('package_show')(context, {'id': id})
@@ -228,7 +227,6 @@ def params():
     so we fake it (test_register).
     defaults: register at 'real' server and get a DOI
     """
-    # TODO implement this more functional
 
     ptest = lambda p: p in tk.request.params
     ctest = {'true': True, 'false': False}.get(config.get('ckanext.dara.use_testserver', 'false'))

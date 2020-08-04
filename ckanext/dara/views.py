@@ -6,7 +6,7 @@ from ckan import model
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckan.lib.uploader as uploader
-from ckan.common import c, g, response, request
+from ckan.common import g, response, request
 from toolz.dicttoolz import keyfilter, get_in
 
 from lxml import etree
@@ -19,9 +19,9 @@ import ckan.lib.base as base
 import ckan.lib.uploader as uploader
 from ckanext.dara.helpers import check_journal_role
 
-from datetime import datetime
-import doi as doi_helpers
 import flask
+import doi as doi_helpers
+from datetime import datetime
 from flask import make_response
 
 from ckan.common import config
@@ -39,11 +39,15 @@ def admin_req(func):
     @wraps(func)
     def check(*args, **kwargs):
         id = kwargs['id']
-        controller = args[0]
-        pkg = tk.get_action('package_show')(None, {'id': id})
+        try:
+            pkg = tk.get_action('package_show')(None, {'id': id})
+        except:
+            h.flash_error("Unauthorized to manage DOIs")
+            return h.redirect_to(u"home.index")
+
         if not check_journal_role(pkg, 'admin') and not h.check_access('sysadmin'):
-            tk.abort(401, 'unauthorized to manage DOIs')
-        return func(controller, id)
+            base.abort(401, 'Unauthorized to manage DOIs')
+        return func(id)
     return check
 
 

@@ -9,7 +9,6 @@ from ckan.common import g, request
 from ckanext.dara import schema as dara_schema
 from ckanext.dara.schema import author_fields, fields
 from ckanext.dara.ftools import list_dicter, dicter
-#from pylons import config
 from ckan.common import config
 import json
 from ckan.authz import users_role_for_group_or_org
@@ -65,7 +64,6 @@ def dara_pkg(id=None, type='id'):
     except:
         pkg = model.Package.by_name(pkg_id)
 
-    # params = request.params
     return pkg
 
 
@@ -100,16 +98,12 @@ def resource_author_fields():
 
 def dara_resource():
     """
-    somehow hack. c.resource doesnt return a resource when calling .../dara_xml
+    Return the dara resource
     """
     try:
         return tk.get_action('resource_show')(None, {'id': _get_id('resource_id')})
     except:
         return False
-
-
-# def get_request_params():
-#    return tk.request.params
 
 
 def dara_resource_url(url):

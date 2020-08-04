@@ -13,7 +13,7 @@ from itertools import chain
 from ckanext.dara import helpers
 from ckanext.dara import validators, converters
 from copy import deepcopy
-from pylons import config
+from ckan.common import config
 import doi
 import mimetypes
 import api
